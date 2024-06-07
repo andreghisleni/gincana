@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  userName String  @unique @map("user_name")
+  image    String?
+
+  passwordHash String  @map("password_hash")
+  password     String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  activity Activity?
+
+  @@map("users")
+}
+
+model Activity {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  scoreType        ScoreType        @map("score_type")
+  scoreOrdenation  ScoreOrdenation? @map("score_ordenation")
+  scoreDescription String?          @map("score_description")
+  defaultScore     Float?           @map("default_score")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Score     Score[]
+
+  @@map("activities")
+}
+
+enum ScoreType {
+  NUMBER
+  TIME
+  DISTANCE
+  WEIGHT
+  POINTS
+}
+
+enum ScoreOrdenation {
+  BIGGER
+  SMALLER
+  CLOSER
+}
+
+model Team {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Score     Score[]
+}
+
+model Score {
+  id    String @id @default(uuid())
+  value Float
+
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId String   @map("activity_id")
+
+  teamId String @map("team_id")
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("scores")
+}

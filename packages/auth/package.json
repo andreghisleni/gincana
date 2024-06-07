@@ -1,0 +1,31 @@
+{
+  "name": "@gincana/auth",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^1.5.1",
+    "@gincana/env": "workspace:*",
+    "@gincana/prisma": "workspace:*",
+    "@prisma/client": "5.11.0",
+    "bcryptjs": "^2.4.3",
+    "next-auth": "5.0.0-beta.16"
+  },
+  "devDependencies": {
+    "@gincana/eslint-config": "workspace:*",
+    "@gincana/prettier": "workspace:*",
+    "@gincana/tsconfig": "workspace:*",
+    "@types/bcryptjs": "^2.4.6"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@gincana/eslint-config/lib"
+    ]
+  },
+  "prettier": "@gincana/prettier"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@gincana/trpc",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@gincana/auth": "workspace:*",
+    "@gincana/cloudflare": "workspace:*",
+    "@gincana/dayjs": "workspace:*",
+    "@gincana/env": "workspace:*",
+    "@gincana/prisma": "workspace:*",
+    "@gincana/schema": "workspace:*",
+    "@prisma/client": "5.11.0",
+    "@trpc/server": "11.0.0-next.324",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3",
+    "kutt": "^3.0.2",
+    "superjson": "^2.2.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@gincana/eslint-config": "workspace:*",
+    "@gincana/prettier": "workspace:*",
+    "@gincana/tsconfig": "workspace:*",
+    "@types/bcryptjs": "^2.4.6"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@gincana/eslint-config/lib"
+    ]
+  },
+  "prettier": "@gincana/prettier"
+}

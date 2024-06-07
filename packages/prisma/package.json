@@ -1,0 +1,47 @@
+{
+  "name": "@gincana/prisma",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "db:generate": "pnpm env:load prisma generate",
+    "db:migrate": "pnpm env:load prisma migrate dev",
+    "db:m:r": "pnpm env:load prisma migrate resolve",
+    "db:migrate:deploy": "pnpm env:load prisma migrate deploy",
+    "db:studio": "pnpm env:load prisma studio",
+    "db:seed": "pnpm env:load tsx seed.ts",
+    "db:seed:od": "pnpm env:load tsx seed-old-data-agendamento.ts",
+    "lint": "eslint .",
+    "env:load": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@gincana/env": "workspace:*",
+    "@neondatabase/serverless": "^0.7.2",
+    "@prisma/adapter-neon": "^5.11.0",
+    "@prisma/client": "5.11.0",
+    "axios": "1.4.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv-cli": "7.3.0",
+    "ws": "^8.16.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@gincana/eslint-config": "workspace:*",
+    "@gincana/prettier": "workspace:*",
+    "@gincana/tsconfig": "workspace:*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "20.4.0",
+    "@types/ws": "^8.5.10",
+    "prisma": "^5.11.0",
+    "tsx": "4.7.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@gincana/eslint-config/lib"
+    ]
+  },
+  "prettier": "@gincana/prettier"
+}
