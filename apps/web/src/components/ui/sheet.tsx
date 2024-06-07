@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 export const sheetVariants = tv({
-  base: 'fixed z-50 gap-4 bg-white p-6 shadow-lg transition ease-in-out dark:bg-card',
+  base: 'fixed z-50 gap-4 bg-white p-6 shadow-lg transition ease-in-out dark:bg-card overflow-y-auto',
   variants: {
     side: {
       top: 'inset-x-0 top-0 border-b',

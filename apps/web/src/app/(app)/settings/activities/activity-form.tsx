@@ -55,6 +55,13 @@ export function ActivityForm({
   const [isOpen, setIsOpen] = useState(false)
   const form = useForm<z.infer<typeof activitySchema>>({
     resolver: zodResolver(activitySchema),
+    defaultValues: activity
+      ? {
+          ...activity,
+          defaultScore: activity.defaultScore || undefined,
+          scoreDescription: activity.scoreDescription || undefined,
+        }
+      : undefined,
   })
 
   const createActivity = trpc.createActivity.useMutation({

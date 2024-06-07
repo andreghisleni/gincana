@@ -1,9 +1,9 @@
 'use client'
 
-import { signInReact } from '@gincana/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, LogIn } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -37,7 +37,7 @@ export function SignInForm() {
   async function handleSignIn(data: SignInFormSchema) {
     const { userName, password } = data
 
-    const response = await signInReact('credentials', {
+    const response = await signIn('credentials', {
       userName,
       password,
       // redirect: false,

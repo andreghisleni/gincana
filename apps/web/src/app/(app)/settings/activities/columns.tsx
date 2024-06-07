@@ -1,5 +1,6 @@
 'use client'
 
+import { ScoreOrdination, ScoreType } from '@gincana/schema'
 import { RouterOutput } from '@gincana/trpc'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -16,14 +17,41 @@ type ColumnsProps = {
   refetch: () => void
 }
 
+// title
+// description
+// scoreType
+// scoreOrdination
+// scoreDescription
+// defaultScore
+
 export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
   {
-    accessorKey: 'name',
-    header: tableDataButton('Nome'),
+    accessorKey: 'title',
+    header: tableDataButton('Título'),
   },
   {
-    accessorKey: 'feePercentage',
-    header: tableDataButton('Taxa (%)'),
+    accessorKey: 'description',
+    header: 'Descrição',
+  },
+  {
+    accessorKey: 'scoreType',
+    header: 'Tipo de pontuação',
+    cell: ({ getValue }) => ScoreType[getValue<ScoreType>()] || getValue(),
+  },
+  {
+    accessorKey: 'scoreOrdination',
+    header: 'Ordenação da pontuação',
+    cell: ({ getValue }) =>
+      ScoreOrdination[getValue<ScoreOrdination>()] || getValue(),
+  },
+  {
+    accessorKey: 'scoreDescription',
+    header: 'Descrição da pontuação',
+  },
+  {
+    accessorKey: 'defaultScore',
+    header: 'Pontuação padrão',
+    cell: ({ getValue }) => getValue() || '-',
   },
   {
     accessorKey: 'createdAt',

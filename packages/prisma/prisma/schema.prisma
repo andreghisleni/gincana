@@ -35,6 +35,8 @@ model Activity {
   scoreDescription String?         @map("score_description")
   defaultScore     Float?          @map("default_score")
 
+  numberOfTeams Int @map("number_of_teams")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   Score     Score[]

@@ -1,11 +1,9 @@
-import { PrismaAdapter } from '@auth/prisma-adapter'
-import { prisma } from '@gincana/prisma'
 import type { NextAuthConfig, Session } from 'next-auth'
 
 import { credentialsProvider } from './credentials-provider'
 
 export const authConfig = {
-  adapter: PrismaAdapter(prisma), // eslint-disable-line
+  // adapter: PrismaAdapter(prisma), // eslint-disable-line
   providers: [credentialsProvider],
   pages: {
     signIn: '/auth/sign-in',

@@ -29,7 +29,7 @@ export const credentialsProvider = CredentialsProvider({
         userName: credentials.userName,
       },
       include: {
-        activity: true,
+        Activity: true,
       },
     })
 
@@ -51,7 +51,7 @@ export const credentialsProvider = CredentialsProvider({
       userName: userExists.userName,
       name: userExists.name,
       image: userExists.image,
-      activityId: userExists.activity?.id || null,
+      activityId: userExists.Activity?.id || null,
     }
   },
 })
