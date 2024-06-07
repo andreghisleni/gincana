@@ -1,4 +1,4 @@
-import { Calendar, Church, Coins, User2 } from 'lucide-react'
+import { Activity, Calendar, Church, Coins, User2, Users } from 'lucide-react'
 import { ReactNode } from 'react'
 
 import { Screen } from '@/components/screen'
@@ -21,29 +21,13 @@ export default async function Layout({ children }: { children: ReactNode }) {
                 <User2 className="mr-2 size-4" />
                 Profile
               </AsideLink>
-              <AsideLink href="/settings/clinics">
-                <Church className="mr-2 size-4" />
-                Suas clinicas
+              <AsideLink href="/settings/activities">
+                <Activity className="mr-2 size-4" />
+                Atividades
               </AsideLink>
-              <AsideLink href="/settings/schedule">
-                <Calendar className="mr-2 size-4" />
-                Agenda
-              </AsideLink>
-              <AsideLink href="/settings/schedule/day" shouldMatchExact={false}>
-                <Calendar className="mr-2 size-4" />
-                Dias abertos
-              </AsideLink>
-              <AsideLink href="/settings/schedule/type">
-                <Calendar className="mr-2 size-4" />
-                Procedimentos
-              </AsideLink>
-              <AsideLink href="/settings/payment/methods">
-                <Coins className="mr-2 size-4" />
-                Métodos de pagamento
-              </AsideLink>
-              <AsideLink href="/settings/payment/discounts">
-                <Coins className="mr-2 size-4" />
-                Descontos
+              <AsideLink href="/settings/teams">
+                <Users className="mr-2 size-4" />
+                Equipes
               </AsideLink>
             </div>
             {/* <div className="flex flex-col gap-1">

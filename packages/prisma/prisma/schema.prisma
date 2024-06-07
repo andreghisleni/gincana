@@ -19,7 +19,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  activity Activity?
+  activityId String?   @unique @map("activity_id")
+  Activity   Activity? @relation(fields: [activityId], references: [id])
 
   @@map("users")
 }
@@ -29,17 +30,16 @@ model Activity {
   title       String
   description String
 
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
-
-  scoreType        ScoreType        @map("score_type")
-  scoreOrdenation  ScoreOrdenation? @map("score_ordenation")
-  scoreDescription String?          @map("score_description")
-  defaultScore     Float?           @map("default_score")
+  scoreType        ScoreType       @map("score_type")
+  scoreOrdination  ScoreOrdination @map("score_ordination")
+  scoreDescription String?         @map("score_description")
+  defaultScore     Float?          @map("default_score")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   Score     Score[]
+
+  User User?
 
   @@map("activities")
 }
@@ -52,7 +52,8 @@ enum ScoreType {
   POINTS
 }
 
-enum ScoreOrdenation {
+enum ScoreOrdination {
+  NONE
   BIGGER
   SMALLER
   CLOSER

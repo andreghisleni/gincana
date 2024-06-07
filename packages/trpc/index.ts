@@ -1,9 +1,10 @@
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 
+import { activitiesRouter } from './routers/activity'
 import { usersRouter } from './routers/users'
 import { createCallerFactory, mergeRouters } from './trpc'
 
-export const appRouter = mergeRouters(usersRouter)
+export const appRouter = mergeRouters(usersRouter, activitiesRouter)
 
 export { createCallerFactory }
 
