@@ -4,8 +4,10 @@ import { ScoreOrdination, ScoreType } from '@gincana/schema'
 import { RouterOutput } from '@gincana/trpc'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import Link from 'next/link'
 
 import { tableDataButton } from '@/components/TableDataButton'
+import { Button } from '@/components/ui/button'
 
 import { ActivityForm } from './activity-form'
 
@@ -73,7 +75,12 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => (
-      <ActivityForm refetch={refetch} activity={row.original} />
+      <>
+        <ActivityForm refetch={refetch} activity={row.original} />
+        <Button variant="outline" asChild>
+          <Link href={`/activity/${row.original.id}`}>Lançar pontuação</Link>
+        </Button>
+      </>
     ),
   },
 ]

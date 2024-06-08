@@ -1,5 +1,6 @@
 import { prisma } from '@gincana/prisma'
 import { activitySchema, activityUpdateSchema } from '@gincana/schema'
+import { z } from 'zod'
 
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
@@ -14,7 +15,7 @@ export const activitiesRouter = createTRPCRouter({
       return activity
     }),
 
-  getActivity: protectedProcedure.query(async ({ input }) => {
+  getActivity: protectedProcedure.input(z.string()).query(async ({ input }) => {
     const activity = await prisma.activity.findFirst({
       where: {
         id: input,
