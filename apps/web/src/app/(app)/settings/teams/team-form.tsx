@@ -1,6 +1,6 @@
 'use client'
 
-import { discountSchema, DiscountType } from '@gincana/schema'
+import { teamSchema } from '@gincana/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -28,37 +28,31 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/lib/trpc/react'
 
-import { Discount } from './columns'
+import { Team } from './columns'
 
-const formName = discountSchema.description
+const formName = teamSchema.description
 
-const values = {
-  discountType: Object.keys(DiscountType).map((v) => ({
-    value: v,
-    label: DiscountType[v] || v,
-  })),
-}
+const values = {}
 
-export function DiscountForm({
+export function TeamForm({
   refetch,
-  discount,
+  team,
 }: {
   refetch: () => void
-  discount?: Discount
+  team?: Team
 }) {
   const { toast } = useToast()
   const [isOpen, setIsOpen] = useState(false)
-  const form = useForm<z.infer<typeof discountSchema>>({
-    resolver: zodResolver(discountSchema),
-    defaultValues: {
-      name: discount?.name || '',
-      description: discount?.description || '',
-      discountType: discount?.discountType || 'PERCENTAGE',
-      discountValue: discount ? Number(discount.discountValue) : 0,
-    },
+  const form = useForm<z.infer<typeof teamSchema>>({
+    resolver: zodResolver(teamSchema),
+    defaultValues: team
+      ? {
+          ...team,
+        }
+      : undefined,
   })
 
-  const createDiscount = trpc.createDiscount.useMutation({
+  const createTeam = trpc.createTeam.useMutation({
     onSuccess: () => {
       form.reset()
       setIsOpen(false)
@@ -80,7 +74,7 @@ export function DiscountForm({
     },
   })
 
-  const updateDiscount = trpc.updateDiscount.useMutation({
+  const updateTeam = trpc.updateTeam.useMutation({
     onSuccess: () => {
       form.reset()
       setIsOpen(false)
@@ -102,19 +96,19 @@ export function DiscountForm({
     },
   })
 
-  async function onSubmit(values: z.infer<typeof discountSchema>) {
+  async function onSubmit(values: z.infer<typeof teamSchema>) {
     try {
-      if (discount) {
-        await updateDiscount.mutateAsync({
-          id: discount.id,
+      if (team) {
+        await updateTeam.mutateAsync({
+          id: team.id,
           ...values,
         })
       } else {
-        await createDiscount.mutateAsync(values)
+        await createTeam.mutateAsync(values)
       }
 
       console.log('values', values)
-    } catch (error) { }
+    } catch (error) { } // eslint-disable-line
   }
 
   useEffect(() => {
@@ -126,62 +120,22 @@ export function DiscountForm({
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">{discount ? 'Editar' : 'Adicionar'}</Button>
+        <Button variant="outline">{team ? 'Editar' : 'Adicionar'}</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>
-            {discount ? 'Editar' : 'Cadastrar'} {formName}
+            {team ? 'Editar' : 'Cadastrar'} {formName}
           </SheetTitle>
         </SheetHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="max-h-screen space-y-8 overflow-auto"
-          >
-            {/* <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {discountSchema.shape.name.description}
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="feePercentage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Taxa (%)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Taxa" {...field} type="number" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <pre>
-              {JSON.stringify(
-                {
-                  fields: Object.keys(discountSchema.shape),
-                  data: discountSchema.shape,
-                },
-                null,
-                2,
-              )}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* <pre>
+              {JSON.stringify(Object.keys(teamSchema.shape), null, 2)}
             </pre> */}
 
-            {Object.keys(discountSchema.shape).map((fieldName) => {
-              const fieldSchema = discountSchema.shape[fieldName]
+            {Object.keys(teamSchema.shape).map((fieldName) => {
+              const fieldSchema = teamSchema.shape[fieldName]
               const label = fieldSchema._def.description // Obtém a descrição do campo
 
               if (fieldSchema._def.typeName === 'ZodEnum') {
@@ -191,7 +145,7 @@ export function DiscountForm({
                   <FormField
                     key={fieldName}
                     control={form.control}
-                    name={fieldName as keyof typeof discountSchema.shape}
+                    name={fieldName as keyof typeof teamSchema.shape}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{label}</FormLabel>
@@ -203,7 +157,7 @@ export function DiscountForm({
                             value={v.filter(
                               (value) => value.value === field.value,
                             )}
-                            onChange={(value: any) => { // eslint-disable-line
+                onChange={(value: any) => { // eslint-disable-line
                               field.onChange(value.value)
                             }}
                             options={v}
@@ -226,7 +180,7 @@ export function DiscountForm({
                   <FormField
                     key={fieldName}
                     control={form.control}
-                    name={fieldName as keyof typeof discountSchema.shape}
+                    name={fieldName as keyof typeof teamSchema.shape}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{label}</FormLabel>
@@ -249,7 +203,7 @@ export function DiscountForm({
                     <FormField
                       key={fieldName}
                       control={form.control}
-                      name={fieldName as keyof typeof discountSchema.shape}
+                      name={fieldName as keyof typeof teamSchema.shape}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{label}</FormLabel>
@@ -270,7 +224,7 @@ export function DiscountForm({
             <Button type="submit" className="w-full">
               {form.formState.isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : discount ? (
+              ) : team ? (
                 'Editar'
               ) : (
                 'Cadastrar'

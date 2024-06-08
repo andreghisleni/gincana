@@ -31,27 +31,32 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
   },
   {
     accessorKey: 'description',
-    header: 'Descrição',
+    header: tableDataButton('Descrição'),
   },
   {
     accessorKey: 'scoreType',
-    header: 'Tipo de pontuação',
+    header: tableDataButton('Tipo de pontuação'),
     cell: ({ getValue }) => ScoreType[getValue<ScoreType>()] || getValue(),
   },
   {
     accessorKey: 'scoreOrdination',
-    header: 'Ordenação da pontuação',
+    header: tableDataButton('Ordenação da pontuação'),
     cell: ({ getValue }) =>
       ScoreOrdination[getValue<ScoreOrdination>()] || getValue(),
   },
   {
     accessorKey: 'scoreDescription',
-    header: 'Descrição da pontuação',
+    header: tableDataButton('Descrição da pontuação'),
   },
   {
     accessorKey: 'defaultScore',
-    header: 'Pontuação padrão',
+    header: tableDataButton('Pontuação padrão'),
     cell: ({ getValue }) => getValue() || '-',
+  },
+  {
+    accessorKey: 'numberOfTeams',
+    header: tableDataButton('Número de equipes'),
+    cell: ({ getValue }) => (getValue() === 0 ? 'Todas' : getValue()) || '-',
   },
   {
     accessorKey: 'createdAt',

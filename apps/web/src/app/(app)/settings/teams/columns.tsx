@@ -6,32 +6,20 @@ import { format } from 'date-fns'
 
 import { tableDataButton } from '@/components/TableDataButton'
 
-import { ScheduleForm } from './schedule-form'
+import { TeamForm } from './team-form'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Schedule = RouterOutput['getSchedules']['schedules'][0]
+export type Team = RouterOutput['getTeams']['teams'][0]
 
 type ColumnsProps = {
   refetch: () => void
 }
 
-export const columns = ({ refetch }: ColumnsProps): ColumnDef<Schedule>[] => [
+export const columns = ({ refetch }: ColumnsProps): ColumnDef<Team>[] => [
   {
     accessorKey: 'name',
-    header: tableDataButton('Nome'),
-  },
-  {
-    accessorKey: 'description',
-    header: tableDataButton('Descrição'),
-  },
-  {
-    accessorKey: 'startTime',
-    header: tableDataButton('Início'),
-  },
-  {
-    accessorKey: 'endTime',
-    header: tableDataButton('Fim'),
+    header: tableDataButton('Nome da equipe'),
   },
   {
     accessorKey: 'createdAt',
@@ -47,8 +35,6 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Schedule>[] => [
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => (
-      <ScheduleForm refetch={refetch} schedule={row.original} />
-    ),
+    cell: ({ row }) => <TeamForm refetch={refetch} team={row.original} />,
   },
 ]

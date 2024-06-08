@@ -67,7 +67,9 @@ model Team {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  Score     Score[]
+  scores    Score[]
+
+  @@map("teams")
 }
 
 model Score {
@@ -83,5 +85,6 @@ model Score {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([activityId, teamId])
   @@map("scores")
 }
