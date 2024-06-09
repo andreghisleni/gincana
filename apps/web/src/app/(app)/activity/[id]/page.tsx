@@ -1,9 +1,10 @@
+import { RouterOutput } from '@gincana/trpc'
 import { unstable_noStore } from 'next/cache'
 import { z } from 'zod'
 
-import { Screen } from '@/components/screen'
-import { ShowJson } from '@/components/show-json'
 import { serverClient } from '@/lib/trpc/server'
+
+import { ActivityP } from './activity'
 
 const activityPagePropsSchema = z.object({
   params: z.object({
@@ -12,6 +13,8 @@ const activityPagePropsSchema = z.object({
 })
 
 export type ActivityPageProps = z.infer<typeof activityPagePropsSchema>
+
+export type Activity = NonNullable<RouterOutput['getActivity']['activity']>
 
 export default async function ActivityPage(p: ActivityPageProps) {
   unstable_noStore()
@@ -26,10 +29,9 @@ export default async function ActivityPage(p: ActivityPageProps) {
 
   const { activity } = await serverClient.getActivity(id)
 
-  return (
-    <Screen>
-      <h1>Activity Page {id}</h1>
-      <ShowJson data={activity} />
-    </Screen>
-  )
+  if (!activity) {
+    return <div>Activity not found</div>
+  }
+
+  return <ActivityP activity={activity} />
 }

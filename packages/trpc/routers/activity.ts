@@ -20,6 +20,9 @@ export const activitiesRouter = createTRPCRouter({
       where: {
         id: input,
       },
+      include: {
+        scores: true,
+      },
     })
 
     return { activity }
