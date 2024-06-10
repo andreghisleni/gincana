@@ -2,22 +2,21 @@
 
 import { format } from 'date-fns'
 import { ArrowRight } from 'lucide-react'
-import { useState } from 'react'
 
 import { Screen } from '@/components/screen'
-import { ShowJson } from '@/components/show-json'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
-import { nativeClient } from '@/lib/trpc/client'
+import { usePersistentState } from '@/hooks/use-percistent-state'
 import { trpc } from '@/lib/trpc/react'
 
+import Loading from './loading'
 import { Activity } from './page'
 import { Timer } from './timer'
 
 type ActivityOneTeamProps = {
   activity: Activity
-  refetch: () => void
+  refetch: () => Promise<void>
 }
 type Team = {
   id: string
@@ -25,21 +24,71 @@ type Team = {
 }
 
 export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
-  const { data: teams, refetch: refetchTeams } = trpc.getTeams.useQuery()
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(() => {
-    const selectedTeam = localStorage.getItem('selectedTeam')
-    if (selectedTeam) {
-      return JSON.parse(selectedTeam)
-    }
-    return null
-  })
+  const {
+    data: teams,
+    refetch: refetchTeams,
+    isFetching: isFetchingTeams,
+  } = trpc.getTeams.useQuery()
+
+  const [selectedTeam, setSelectedTeam] = usePersistentState<Team | null>(
+    'selectedTeam',
+    null,
+  )
+  const [lockSelectedTeam, setLockSelectedTeam] = usePersistentState<boolean>(
+    'lockSelectedTeam',
+    false,
+  )
+
+  // useEffect(() => {
+  //   if (!selectedTeam && !isFetchingTeams) {
+  //     const st = setTimeout(() => {
+  //       refetchTeams()
+  //     }, 10000)
+
+  //     return () => clearTimeout(st)
+  //   }
+  // }, [selectedTeam, isFetchingTeams, refetchTeams])
+
   const { toast } = useToast()
 
-  if (!teams) {
-    return <div>Teams not found</div>
+  const createScore = trpc.createScore.useMutation({
+    onSuccess: () => {
+      refetch()
+      refetchTeams()
+      setSelectedTeam(null)
+      toast({
+        title: 'Pontuação enviada com sucesso',
+        description: 'A pontuação foi enviada com sucesso',
+      })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Erro ao enviar pontuação',
+        variant: 'destructive',
+        description: error.message,
+      })
+    },
+  })
+
+  if (isFetchingTeams) {
+    return <Loading />
   }
 
-  const handleFinish = async (time: number) => {
+  if (!teams) {
+    return (
+      <Screen>
+        <div className="flex h-screen justify-center ">
+          <div className="flex h-screen w-full max-w-lg flex-col gap-4 border p-4">
+            <h1 className="text-xl">Atividade: {activity.title}</h1>
+            <Separator orientation="horizontal" />
+            <div>Teams not found</div>
+          </div>
+        </div>
+      </Screen>
+    )
+  }
+
+  const handleFinish = async (score: number) => {
     if (!selectedTeam) {
       toast({
         title: 'Selecione uma equipe',
@@ -48,27 +97,11 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
       return
     }
 
-    try {
-      await nativeClient.createScore.mutate({
-        activityId: activity.id,
-        teamId: selectedTeam?.id,
-        score: time,
-      })
-      toast({
-        title: 'Pontuação enviada',
-      })
-      refetch()
-      refetchTeams()
-
-      localStorage.removeItem('selectedTeam')
-      setSelectedTeam(null)
-    } catch (error: any) {// eslint-disable-line
-      toast({
-        title: 'Erro ao enviar pontuação',
-        variant: 'destructive',
-        description: error.message,
-      })
-    }
+    await createScore.mutateAsync({
+      activityId: activity.id,
+      teamId: selectedTeam?.id,
+      score,
+    })
   }
 
   const filteredTeamsWithOutScore = teams.teams.filter(
@@ -87,7 +120,7 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
           <Separator orientation="horizontal" />
 
           {!selectedTeam && (
-            <div>
+            <div className="flex flex-col gap-2">
               <h2 className="text-lg">Selecione uma das equipes</h2>
               <div className="flex w-full flex-col gap-4">
                 {filteredTeamsWithOutScore.map((t) => (
@@ -97,7 +130,6 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                     className="flex items-center justify-between"
                     onClick={() => {
                       setSelectedTeam(t)
-                      localStorage.setItem('selectedTeam', JSON.stringify(t))
                     }}
                   >
                     <h3>{t.name}</h3>
@@ -105,6 +137,7 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                   </Button>
                 ))}
               </div>
+              <Separator orientation="horizontal" />
               <h2 className="text-lg">Equipes que já participaram</h2>
               <div className="flex w-full flex-col gap-4">
                 {filteredTeamsWithScore.map((t) => (
@@ -130,6 +163,7 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
               </div>
             </div>
           )}
+
           {selectedTeam && (
             <>
               <div>
@@ -139,20 +173,21 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                 <Button
                   onClick={() => {
                     setSelectedTeam(null)
-                    localStorage.removeItem('selectedTeam')
                   }}
+                  disabled={lockSelectedTeam && !!selectedTeam}
                 >
                   Selecionar outra equipe
                 </Button>
               </div>
               <Separator orientation="horizontal" />
 
-              {activity.scoreType === 'TIME' && <Timer {...{ handleFinish }} />}
+              {activity.scoreType === 'TIME' && (
+                <Timer {...{ handleFinish, setLockSelectedTeam }} />
+              )}
             </>
           )}
         </div>
       </div>
-      <ShowJson data={activity} />
     </Screen>
   )
 }

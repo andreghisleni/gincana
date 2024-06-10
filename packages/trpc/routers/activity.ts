@@ -25,6 +25,12 @@ export const activitiesRouter = createTRPCRouter({
       },
     })
 
+    // await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve('a')
+    //   }, 2000)
+    // })
+
     return { activity }
   }),
 

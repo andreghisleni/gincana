@@ -40,8 +40,8 @@ export function SignInForm() {
     const response = await signIn('credentials', {
       userName,
       password,
-      // redirect: false,
-      // callbackUrl: '/',
+      redirect: false,
+      callbackUrl: '/',
     })
 
     if (response?.error) {
