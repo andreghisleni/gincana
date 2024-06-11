@@ -25,6 +25,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/lib/trpc/react'
 
@@ -129,6 +130,76 @@ export function ActivityForm({
     }
   }, [isOpen, form])
 
+  function pasted(event: React.ClipboardEvent) {
+    const clipboardData = event.clipboardData
+    const pastedData = clipboardData?.getData('Text')
+
+    if (pastedData) {
+      const data = pastedData.split('	')
+
+      if (data.length === 5) {
+        const [title, description, scoreDescription, numberOfTeams, score] =
+          data
+
+        form.setValue('title', title)
+        form.setValue('description', description)
+        form.setValue('scoreDescription', scoreDescription)
+        form.setValue(
+          'numberOfTeams',
+          numberOfTeams === 'todas' ? 0 : Number(numberOfTeams),
+        )
+        const scoreOptions = [
+          'maior tempo',
+          'x de pontos',
+          'menor tempo',
+          'somatoria de pontos',
+        ]
+
+        if (scoreOptions.includes(score)) {
+          // if (score === 'maior tempo') {
+          //   form.setValue('scoreType', 'TIME')
+          //   form.setValue('scoreOrdination', 'BIGGER')
+          // } else if (score === 'menor tempo') {
+          //   form.setValue('scoreType', 'TIME')
+          //   form.setValue('scoreOrdination', 'SMALLER')
+          // } else if (score === 'x de pontos') {
+          //   form.setValue('scoreType', 'POINTS')
+          //   form.setValue('scoreOrdination', 'NONE')
+          // } else if (score === 'somatoria de pontos') {
+          //   form.setValue('scoreType', 'NUMBER')
+          //   form.setValue('scoreOrdination', 'BIGGER')
+          // }
+
+          switch (score) {
+            case 'maior tempo':
+              form.setValue('scoreType', 'TIME')
+              form.setValue('scoreOrdination', 'BIGGER')
+              break
+            case 'menor tempo':
+              form.setValue('scoreType', 'TIME')
+              form.setValue('scoreOrdination', 'SMALLER')
+              break
+            case 'x de pontos':
+              form.setValue('scoreType', 'POINTS')
+              form.setValue('scoreOrdination', 'NONE')
+              form.setValue('defaultScore', 10)
+              break
+            case 'somatoria de pontos':
+              form.setValue('scoreType', 'NUMBER')
+              form.setValue('scoreOrdination', 'BIGGER')
+              break
+          }
+        }
+
+        //
+      }
+
+      // console.log(data)
+    }
+  }
+
+  // form.watch('title') && console.log(form.watch('title').split(''))
+
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
@@ -141,7 +212,11 @@ export function ActivityForm({
           </SheetTitle>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+            onPaste={pasted}
+          >
             {/* <pre>
               {JSON.stringify(Object.keys(activitySchema.shape), null, 2)}
             </pre> */}
@@ -149,6 +224,9 @@ export function ActivityForm({
             {Object.keys(activitySchema.shape).map((fieldName) => {
               const fieldSchema = activitySchema.shape[fieldName]
               const label = fieldSchema._def.description // Obtém a descrição do campo
+              const fieldMin = fieldSchema._def?.checks?.find(
+                (c) => c.kind === 'min',
+              )?.value // Obtém o valor mínimo do campo (se houver)
 
               if (fieldSchema._def.typeName === 'ZodEnum') {
                 const v: { value: string; label: string }[] = values[fieldName]
@@ -197,7 +275,11 @@ export function ActivityForm({
                       <FormItem>
                         <FormLabel>{label}</FormLabel>
                         <FormControl>
-                          <Input placeholder={label} {...field} />
+                          {fieldMin === 10 ? (
+                            <Textarea placeholder={label} {...field} />
+                          ) : (
+                            <Input placeholder={label} {...field} />
+                          )}
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -220,7 +302,11 @@ export function ActivityForm({
                         <FormItem>
                           <FormLabel>{label}</FormLabel>
                           <FormControl>
-                            <Input placeholder={label} {...field} />
+                            {fieldMin === 10 ? (
+                              <Textarea placeholder={label} {...field} />
+                            ) : (
+                              <Input placeholder={label} {...field} />
+                            )}
                           </FormControl>
                           <FormMessage />
                         </FormItem>

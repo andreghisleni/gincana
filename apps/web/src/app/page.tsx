@@ -1,6 +1,15 @@
+import { auth } from '@gincana/auth'
 import { redirect } from 'next/navigation'
 
-export default function Homepage() {
+export default async function Homepage() {
+  const session = await auth()
+
+  if (session) {
+    if (session.user.activityId) {
+      redirect(`/activity/${session.user.activityId}`)
+    }
+  }
+
   redirect('/dashboard')
   return (
     <div className="flex h-screen items-center justify-center px-6">

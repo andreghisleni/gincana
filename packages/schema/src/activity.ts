@@ -3,14 +3,14 @@ import { z } from 'zod'
 export const activitySchema = z
   .object({
     title: z.string().min(1).describe('Título da atividade'),
-    description: z.string().min(1).describe('Descrição da atividade'),
+    description: z.string().min(10).describe('Descrição da atividade'),
     scoreType: z
       .enum(['NUMBER', 'TIME', 'DISTANCE', 'WEIGHT', 'POINTS'])
       .describe('Tipo de pontuação'),
     scoreOrdination: z
       .enum(['NONE', 'BIGGER', 'SMALLER', 'CLOSER'])
       .describe('Ordenação da pontuação'),
-    scoreDescription: z.string().min(1).describe('Descrição da pontuação'),
+    scoreDescription: z.string().min(10).describe('Descrição da pontuação'),
     defaultScore: z.coerce.number().optional().describe('Pontuação padrão'),
     numberOfTeams: z.coerce
       .number()

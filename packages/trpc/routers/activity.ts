@@ -35,7 +35,16 @@ export const activitiesRouter = createTRPCRouter({
   }),
 
   getActivities: protectedProcedure.query(async () => {
-    const activities = await prisma.activity.findMany()
+    const activities = await prisma.activity.findMany({
+      include: {
+        scores: {
+          include: {
+            team: true,
+          },
+        },
+        User: true,
+      },
+    })
 
     return { activities }
   }),

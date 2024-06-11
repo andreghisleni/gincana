@@ -19,7 +19,7 @@ const signInFormSchema = z.object({
 
 type SignInFormSchema = z.infer<typeof signInFormSchema>
 
-export function SignInForm() {
+export function SignInForm({ user, pass }: { user?: string; pass?: string }) {
   const { toast } = useToast()
   const router = useRouter()
   const {
@@ -29,8 +29,8 @@ export function SignInForm() {
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      userName: '',
-      password: '',
+      userName: user || '',
+      password: pass || '',
     },
   })
 
@@ -57,6 +57,7 @@ export function SignInForm() {
         title: 'Bem-vindo!',
         description: 'Você foi autenticado com sucesso.',
       })
+
       router.push('/')
     }
   }

@@ -3,7 +3,6 @@
 import React from 'react'
 
 import { DataTable } from '@/components/data-table'
-import { ShowJson } from '@/components/show-json'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { trpc } from '@/lib/trpc/react'
 
@@ -28,7 +27,6 @@ export const ActivitiesTable: React.FC<IProps> = ({ activities }) => {
           data={data?.activities || activities}
           addComponent={<ActivityForm refetch={refetch} />}
         />
-        <ShowJson data={data} />
       </CardContent>
     </Card>
   )
