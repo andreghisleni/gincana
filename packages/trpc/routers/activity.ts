@@ -21,7 +21,11 @@ export const activitiesRouter = createTRPCRouter({
         id: input,
       },
       include: {
-        scores: true,
+        scores: {
+          include: {
+            scoresWithMultipleTeams: true,
+          },
+        },
       },
     })
 
@@ -40,6 +44,7 @@ export const activitiesRouter = createTRPCRouter({
         scores: {
           include: {
             team: true,
+            scoresWithMultipleTeams: true,
           },
         },
         User: true,

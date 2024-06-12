@@ -69,6 +69,8 @@ model Team {
   updatedAt DateTime @updatedAt @map("updated_at")
   scores    Score[]
 
+  scoresWithMultipleTeams Score[] @relation("ScoreToTeams")
+
   @@map("teams")
 }
 
@@ -81,6 +83,8 @@ model Score {
 
   teamId String @map("team_id")
   team   Team   @relation(fields: [teamId], references: [id])
+
+  scoresWithMultipleTeams Team[] @relation("ScoreToTeams")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

@@ -4,6 +4,7 @@ import { ShowJson } from '@/components/show-json'
 import { trpc } from '@/lib/trpc/react'
 
 import { ActivityOneTeam } from './activity-one-team'
+import { ActivityTwoTeams } from './activity-two-teams'
 import Loading from './loading'
 import { Activity } from './page'
 
@@ -60,10 +61,12 @@ export function ActivityP({ activity }: ActivityProps) {
 
   if (a.numberOfTeams === 2) {
     return (
-      <Screen>
-        <h1>Activity Page duas equipes por vez</h1>
-        <ShowJson data={{ activity, data }} />
-      </Screen>
+      <ActivityTwoTeams
+        activity={a}
+        refetch={async () => {
+          await refetch()
+        }}
+      />
     )
   }
 
