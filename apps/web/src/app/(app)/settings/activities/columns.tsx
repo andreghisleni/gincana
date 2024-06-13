@@ -53,6 +53,11 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
     header: tableDataButton('Descrição da pontuação'),
   },
   {
+    accessorKey: 'exactValue',
+    header: tableDataButton('Valor exato'),
+    cell: ({ getValue }) => getValue() || '-',
+  },
+  {
     accessorKey: 'numbers',
     header: tableDataButton('Números da somatória da pontuação'),
     cell: ({ getValue }) =>

@@ -16,6 +16,7 @@ import { Objects } from './objects'
 import { Activity } from './page'
 import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
+import { Weight } from './weight'
 
 type ActivityOneTeamProps = {
   activity: Activity
@@ -184,6 +185,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                         </span>
                       </h3>
                     )}
+
+                    {activity.scoreType === 'WEIGHT' && (
+                      <h3>
+                        Diferença de peso:{' '}
+                        <span>
+                          {activity.scores.find((s) => s.teamId === t.id)
+                            ?.value || 0}
+                        </span>
+                      </h3>
+                    )}
                   </div>
                 ))}
               </div>
@@ -219,6 +230,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                 <SunOfPoints
                   {...{
                     numbers: activity.numbers,
+                    handleFinish,
+                    setLockSelectedTeam,
+                  }}
+                />
+              )}
+
+              {activity.scoreType === 'WEIGHT' && (
+                <Weight
+                  {...{
+                    exactNumber: activity.exactValue || 0,
                     handleFinish,
                     setLockSelectedTeam,
                   }}

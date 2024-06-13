@@ -35,6 +35,8 @@ model Activity {
   scoreDescription String?         @map("score_description")
   defaultScore     Float?          @map("default_score")
 
+  exactValue Float? @map("exact_value")
+
   numbers Int[] @map("numbers")
 
   numberOfTeams Int @map("number_of_teams")

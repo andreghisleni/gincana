@@ -11,6 +11,7 @@ export const activitySchema = z
       .enum(['NONE', 'BIGGER', 'SMALLER', 'CLOSER'])
       .describe('Ordenação da pontuação'),
     scoreDescription: z.string().min(10).describe('Descrição da pontuação'),
+    exactValue: z.coerce.number().optional().describe('Valor exato'),
     numbers: z
       .array(z.coerce.number())
       .optional()

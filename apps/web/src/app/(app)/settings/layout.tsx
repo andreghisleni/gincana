@@ -1,4 +1,4 @@
-import { Activity, Calendar, Church, Coins, User2, Users } from 'lucide-react'
+import { Activity, User2, Users } from 'lucide-react'
 import { ReactNode } from 'react'
 
 import { Screen } from '@/components/screen'
@@ -8,8 +8,8 @@ import { AsideLink } from './aside-link'
 export default async function Layout({ children }: { children: ReactNode }) {
   return (
     <Screen>
-      <div className="grid grid-cols-5 gap-12 px-8">
-        <aside className="-mx-4 space-y-4">
+      <div className="grid grid-cols-10 gap-12 px-8">
+        <aside className="col-span-1 -mx-4 space-y-4">
           <h2 className="mx-4 text-2xl font-bold tracking-tight">Settings</h2>
 
           <nav className="flex flex-col gap-3">
@@ -46,7 +46,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
           </nav>
         </aside>
 
-        <div className="col-span-4">{children}</div>
+        <div className="col-span-9">{children}</div>
       </div>
     </Screen>
   )

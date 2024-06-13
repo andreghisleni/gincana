@@ -27,7 +27,7 @@ export function SunOfPoints({
     if (points !== null) {
       setLockSelectedTeam(true)
     }
-  }, [points])
+  }, [points]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function changePoints(key: string, value: number) {
     if (!points) {
