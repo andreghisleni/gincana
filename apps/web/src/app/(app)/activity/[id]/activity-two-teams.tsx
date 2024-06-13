@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { usePersistentState } from '@/hooks/use-percistent-state'
 import { trpc } from '@/lib/trpc/react'
 
+import { AllTeamsParticipated } from './all-teams-participated'
 import Loading from './loading'
 import { Activity } from './page'
 
@@ -201,6 +202,10 @@ export function ActivityTwoTeams({ activity, refetch }: ActivityTwoTeamsProps) {
                     <span />
                   </Button>
                 ))}
+
+                {filteredTeamsWithOutScore.length === 0 && (
+                  <AllTeamsParticipated />
+                )}
               </div>
               <Separator orientation="horizontal" />
               <h2 className="text-lg">Equipes que já participaram</h2>

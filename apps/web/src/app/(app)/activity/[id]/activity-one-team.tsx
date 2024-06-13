@@ -10,8 +10,11 @@ import { useToast } from '@/components/ui/use-toast'
 import { usePersistentState } from '@/hooks/use-percistent-state'
 import { trpc } from '@/lib/trpc/react'
 
+import { AllTeamsParticipated } from './all-teams-participated'
 import Loading from './loading'
+import { Objects } from './objects'
 import { Activity } from './page'
+import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
 
 type ActivityOneTeamProps = {
@@ -136,6 +139,10 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                     <ArrowRight />
                   </Button>
                 ))}
+
+                {filteredTeamsWithOutScore.length === 0 && (
+                  <AllTeamsParticipated />
+                )}
               </div>
               <Separator orientation="horizontal" />
               <h2 className="text-lg">Equipes que já participaram</h2>
@@ -155,6 +162,25 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                               ?.value || 0,
                             'mm:ss.SSS',
                           )}
+                        </span>
+                      </h3>
+                    )}
+                    {activity.scoreType === 'OBJECTS' && (
+                      <h3>
+                        Objetos:{' '}
+                        <span>
+                          {activity.scores.find((s) => s.teamId === t.id)
+                            ?.value || 0}
+                        </span>
+                      </h3>
+                    )}
+
+                    {activity.scoreType === 'NUMBER' && (
+                      <h3>
+                        Pontos:{' '}
+                        <span>
+                          {activity.scores.find((s) => s.teamId === t.id)
+                            ?.value || 0}
                         </span>
                       </h3>
                     )}
@@ -183,6 +209,20 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
 
               {activity.scoreType === 'TIME' && (
                 <Timer {...{ handleFinish, setLockSelectedTeam }} />
+              )}
+
+              {activity.scoreType === 'OBJECTS' && (
+                <Objects {...{ handleFinish, setLockSelectedTeam }} />
+              )}
+
+              {activity.scoreType === 'NUMBER' && (
+                <SunOfPoints
+                  {...{
+                    numbers: activity.numbers,
+                    handleFinish,
+                    setLockSelectedTeam,
+                  }}
+                />
               )}
             </>
           )}

@@ -17,16 +17,18 @@ export const scoresRouter = createTRPCRouter({
         throw new Error('Team not found')
       }
 
-      const teams = await prisma.team.findMany({
-        where: {
-          id: {
-            in: input.teamsId,
+      if (input.teamsId && input.teamsId.length > 0) {
+        const teams = await prisma.team.findMany({
+          where: {
+            id: {
+              in: input.teamsId,
+            },
           },
-        },
-      })
+        })
 
-      if (teams.length !== input.teamsId?.length) {
-        throw new Error('Some teams not found')
+        if (teams.length !== input.teamsId?.length) {
+          throw new Error('Some teams not found')
+        }
       }
 
       const activity = await prisma.activity.findUnique({
@@ -56,7 +58,7 @@ export const scoresRouter = createTRPCRouter({
           teamId: input.teamId,
           activityId: input.activityId,
           scoresWithMultipleTeams: {
-            connect: input.teamsId.map((id) => ({
+            connect: input.teamsId?.map((id) => ({
               id,
             })),
           },

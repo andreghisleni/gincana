@@ -53,6 +53,12 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
     header: tableDataButton('Descrição da pontuação'),
   },
   {
+    accessorKey: 'numbers',
+    header: tableDataButton('Números da somatória da pontuação'),
+    cell: ({ getValue }) =>
+      getValue() ? getValue<number[]>().join(', ') : '-',
+  },
+  {
     accessorKey: 'defaultScore',
     header: tableDataButton('Pontuação padrão'),
     cell: ({ getValue }) => getValue() || '-',

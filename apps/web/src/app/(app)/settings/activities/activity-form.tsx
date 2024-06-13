@@ -4,7 +4,7 @@ import { activitySchema, ScoreOrdination, ScoreType } from '@gincana/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import z from 'zod'
 
 import { ReactSelect } from '@/components/Select'
@@ -156,20 +156,6 @@ export function ActivityForm({
         ]
 
         if (scoreOptions.includes(score)) {
-          // if (score === 'maior tempo') {
-          //   form.setValue('scoreType', 'TIME')
-          //   form.setValue('scoreOrdination', 'BIGGER')
-          // } else if (score === 'menor tempo') {
-          //   form.setValue('scoreType', 'TIME')
-          //   form.setValue('scoreOrdination', 'SMALLER')
-          // } else if (score === 'x de pontos') {
-          //   form.setValue('scoreType', 'POINTS')
-          //   form.setValue('scoreOrdination', 'NONE')
-          // } else if (score === 'somatoria de pontos') {
-          //   form.setValue('scoreType', 'NUMBER')
-          //   form.setValue('scoreOrdination', 'BIGGER')
-          // }
-
           switch (score) {
             case 'maior tempo':
               form.setValue('scoreType', 'TIME')
@@ -200,6 +186,21 @@ export function ActivityForm({
 
   // form.watch('title') && console.log(form.watch('title').split(''))
 
+  const zodArrays = Object.keys(activitySchema.shape).filter((fieldName) => {
+    const fieldSchema = activitySchema.shape[fieldName]
+
+    return fieldSchema._def.innerType?._def.typeName === 'ZodArray'
+  })
+
+  const zodArraysForm = zodArrays
+    .map((fieldName) => ({
+      [fieldName]: useFieldArray({ // eslint-disable-line
+        control: form.control,
+        name: fieldName as never,
+      }),
+    }))
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
@@ -217,9 +218,7 @@ export function ActivityForm({
             className="space-y-8"
             onPaste={pasted}
           >
-            {/* <pre>
-              {JSON.stringify(Object.keys(activitySchema.shape), null, 2)}
-            </pre> */}
+            <pre>{JSON.stringify({ zodArraysForm }, null, 2)}</pre>
 
             {Object.keys(activitySchema.shape).map((fieldName) => {
               const fieldSchema = activitySchema.shape[fieldName]
@@ -312,6 +311,52 @@ export function ActivityForm({
                         </FormItem>
                       )}
                     />
+                  )
+                }
+
+                if (fieldSchema._def.innerType._def.typeName === 'ZodArray') {
+                  const { append, fields, remove } = zodArraysForm[fieldName]
+                  return (
+                    <>
+                      <Button type="button" onClick={() => append(0)}>
+                        Adicionar {label}
+                      </Button>
+                      {form.formState.errors[fieldName] && (
+                        <FormMessage>
+                          {form.formState.errors[fieldName].message}
+                        </FormMessage>
+                      )}
+
+                      {fields.map((field, index) => (
+                        <FormField
+                          key={field.id}
+                          control={form.control}
+                          name={
+                            `${fieldName}.${index}` as unknown as keyof typeof activitySchema.shape
+                          }
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {label} {index + 1}
+                              </FormLabel>
+                              <FormControl>
+                                <div className="flex gap-4">
+                                  <Input placeholder={label} {...field} />
+                                  <Button
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                    disabled={fields.length === 1}
+                                  >
+                                    Remover
+                                  </Button>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </>
                   )
                 }
               }

@@ -35,6 +35,8 @@ model Activity {
   scoreDescription String?         @map("score_description")
   defaultScore     Float?          @map("default_score")
 
+  numbers Int[] @map("numbers")
+
   numberOfTeams Int @map("number_of_teams")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -48,6 +50,7 @@ model Activity {
 
 enum ScoreType {
   NUMBER
+  OBJECTS
   TIME
   DISTANCE
   WEIGHT

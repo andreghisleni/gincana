@@ -3,6 +3,7 @@ import { Screen } from '@/components/screen'
 import { ShowJson } from '@/components/show-json'
 import { trpc } from '@/lib/trpc/react'
 
+import { ActivityAllTeams } from './activity-all-teams'
 import { ActivityOneTeam } from './activity-one-team'
 import { ActivityTwoTeams } from './activity-two-teams'
 import Loading from './loading'
@@ -41,10 +42,12 @@ export function ActivityP({ activity }: ActivityProps) {
 
   if (a.numberOfTeams === 0) {
     return (
-      <Screen>
-        <h1>Activity Page todas as equipes</h1>
-        <ShowJson data={{ activity, data }} />
-      </Screen>
+      <ActivityAllTeams
+        activity={a}
+        refetch={async () => {
+          await refetch()
+        }}
+      />
     )
   }
 

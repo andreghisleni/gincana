@@ -5,12 +5,16 @@ export const activitySchema = z
     title: z.string().min(1).describe('Título da atividade'),
     description: z.string().min(10).describe('Descrição da atividade'),
     scoreType: z
-      .enum(['NUMBER', 'TIME', 'DISTANCE', 'WEIGHT', 'POINTS'])
+      .enum(['NUMBER', 'OBJECTS', 'TIME', 'DISTANCE', 'WEIGHT', 'POINTS'])
       .describe('Tipo de pontuação'),
     scoreOrdination: z
       .enum(['NONE', 'BIGGER', 'SMALLER', 'CLOSER'])
       .describe('Ordenação da pontuação'),
     scoreDescription: z.string().min(10).describe('Descrição da pontuação'),
+    numbers: z
+      .array(z.coerce.number())
+      .optional()
+      .describe('Números da somatória da pontuação'),
     defaultScore: z.coerce.number().optional().describe('Pontuação padrão'),
     numberOfTeams: z.coerce
       .number()
@@ -28,6 +32,7 @@ export type Activity = z.infer<typeof activityUpdateSchema>
 
 export enum ScoreType {
   NUMBER = 'Número',
+  OBJECTS = 'Objetos',
   TIME = 'Tempo',
   DISTANCE = 'Distancia',
   WEIGHT = 'Peso',
