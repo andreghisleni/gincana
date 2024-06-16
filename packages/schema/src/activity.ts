@@ -5,7 +5,15 @@ export const activitySchema = z
     title: z.string().min(1).describe('Título da atividade'),
     description: z.string().min(10).describe('Descrição da atividade'),
     scoreType: z
-      .enum(['NUMBER', 'OBJECTS', 'TIME', 'DISTANCE', 'WEIGHT', 'POINTS'])
+      .enum([
+        'NUMBER',
+        'OBJECTS',
+        'TIME',
+        'DISTANCE',
+        'WEIGHT',
+        'POINTS',
+        'PRICE',
+      ])
       .describe('Tipo de pontuação'),
     scoreOrdination: z
       .enum(['NONE', 'BIGGER', 'SMALLER', 'CLOSER'])
@@ -38,6 +46,7 @@ export enum ScoreType {
   DISTANCE = 'Distancia',
   WEIGHT = 'Peso',
   POINTS = 'Pontos',
+  PRICE = 'Preço',
 }
 
 export enum ScoreOrdination {

@@ -14,6 +14,7 @@ import { AllTeamsParticipated } from './all-teams-participated'
 import Loading from './loading'
 import { Objects } from './objects'
 import { Activity } from './page'
+import { Prices } from './prices'
 import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
 import { Weight } from './weight'
@@ -195,6 +196,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                         </span>
                       </h3>
                     )}
+
+                    {activity.scoreType === 'PRICE' && (
+                      <h3>
+                        Pontos:{' '}
+                        <span>
+                          {activity.scores.find((s) => s.teamId === t.id)
+                            ?.value || 0}
+                        </span>
+                      </h3>
+                    )}
                   </div>
                 ))}
               </div>
@@ -242,6 +253,20 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                     exactNumber: activity.exactValue || 0,
                     handleFinish,
                     setLockSelectedTeam,
+                  }}
+                />
+              )}
+
+              {activity.scoreType === 'PRICE' && (
+                <Prices
+                  {...{
+                    handleFinish,
+                    setLockSelectedTeam,
+                    products: activity.products.map((p) => ({
+                      id: p.id,
+                      name: p.name,
+                      price: p.price,
+                    })),
                   }}
                 />
               )}

@@ -61,6 +61,7 @@ export function ActivityForm({
           ...activity,
           defaultScore: activity.defaultScore || undefined,
           scoreDescription: activity.scoreDescription || undefined,
+          exactValue: activity.exactValue || undefined,
         }
       : undefined,
   })

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { trpc } from '@/lib/trpc/react'
 
 import { ActivityForm } from './activity-form'
+import { ActivityProductsForm } from './activity-product-form'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -133,6 +134,15 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
     cell: ({ row }) => (
       <>
         <ActivityForm refetch={refetch} activity={row.original} />
+        {row.original.scoreType === 'PRICE' && (
+          <ActivityProductsForm
+            {...{
+              refetch,
+              activityId: row.original.id,
+              products: row.original.products,
+            }}
+          />
+        )}
         <Button variant="outline" asChild>
           <Link href={`/activity/${row.original.id}`}>Lançar pontuação</Link>
         </Button>

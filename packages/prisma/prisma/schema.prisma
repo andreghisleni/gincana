@@ -45,7 +45,8 @@ model Activity {
   updatedAt DateTime @updatedAt @map("updated_at")
   scores    Score[]
 
-  User User?
+  User     User?
+  products ActivityProduct[]
 
   @@map("activities")
 }
@@ -57,6 +58,7 @@ enum ScoreType {
   DISTANCE
   WEIGHT
   POINTS
+  PRICE
 }
 
 enum ScoreOrdination {
@@ -64,6 +66,21 @@ enum ScoreOrdination {
   BIGGER
   SMALLER
   CLOSER
+}
+
+model ActivityProduct {
+  id    String @id @default(uuid())
+  name  String
+  price Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  activityId String   @map("activity_id")
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([activityId, name])
+  @@map("activity_products")
 }
 
 model Team {
