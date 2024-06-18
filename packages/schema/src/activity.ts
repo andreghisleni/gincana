@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const activitySchema = z
   .object({
+    number: z.coerce.number().optional().describe('Número da atividade'),
     title: z.string().min(1).describe('Título da atividade'),
     description: z.string().min(10).describe('Descrição da atividade'),
     scoreType: z

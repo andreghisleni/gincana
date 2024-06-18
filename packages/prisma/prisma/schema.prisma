@@ -27,6 +27,7 @@ model User {
 
 model Activity {
   id          String @id @default(uuid())
+  number      Int?   @unique
   title       String
   description String
 

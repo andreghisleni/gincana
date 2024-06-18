@@ -51,6 +51,9 @@ export const activitiesRouter = createTRPCRouter({
         User: true,
         products: true,
       },
+      orderBy: {
+        number: 'asc',
+      },
     })
 
     return { activities }

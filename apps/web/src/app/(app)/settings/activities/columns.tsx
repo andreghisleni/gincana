@@ -31,6 +31,10 @@ type ColumnsProps = {
 
 export const columns = ({ refetch }: ColumnsProps): ColumnDef<Activity>[] => [
   {
+    accessorKey: 'number',
+    header: tableDataButton('N'),
+  },
+  {
     accessorKey: 'title',
     header: tableDataButton('Título'),
   },
