@@ -56,6 +56,12 @@ export const activitiesRouter = createTRPCRouter({
     return { activities }
   }),
 
+  getTotalActivities: protectedProcedure.query(async () => {
+    const totalActivities = await prisma.activity.count()
+
+    return { totalActivities }
+  }),
+
   updateActivity: protectedProcedure
     .input(activityUpdateSchema)
     .mutation(async ({ input }) => {

@@ -67,4 +67,10 @@ export const scoresRouter = createTRPCRouter({
 
       return score
     }),
+
+  getTotalScores: protectedProcedure.query(async () => {
+    const totalScores = await prisma.score.count()
+
+    return { totalScores }
+  }),
 })
