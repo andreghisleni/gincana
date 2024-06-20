@@ -4,9 +4,9 @@ import { ShowJson } from '@/components/show-json'
 import { trpc } from '@/lib/trpc/react'
 
 import { ActivityAllTeams } from './activity-all-teams'
-import { ActivityOneTeam } from './activity-one-team'
 import { ActivityTwoTeams } from './activity-two-teams'
 import Loading from './loading'
+import { ActivityOneTeam } from './one-team/activity-one-team'
 import { Activity } from './page'
 
 type ActivityProps = {
@@ -17,16 +17,7 @@ export function ActivityP({ activity }: ActivityProps) {
   const { data, refetch, isLoading } = trpc.getActivity.useQuery(activity.id)
 
   if (isLoading) {
-    return (
-      // <Screen>
-      //   <div className="flex justify-center">
-      //     <div className="flex w-full max-w-lg flex-col gap-4 border p-4">
-      //       <h1 className=" text-xl">Loading...</h1>
-      //     </div>
-      //   </div>
-      // </Screen>
-      <Loading />
-    )
+    return <Loading />
   }
 
   const a = data?.activity

@@ -20,10 +20,13 @@ export const columns = ({ activities }: ColumnsProps): ColumnDef<Team>[] => [
   {
     accessorKey: 'name',
     header: tableDataButton('Nome da equipe'),
+    minSize: 400,
   },
   ...activities.map((activity) => ({
-    accessorKey: `activity-${activity.id}`,
-    header: tableDataButton(activity.title),
+    id: `activity-${activity.id}`,
+    header: !activity.number
+      ? tableDataButton(activity.title)
+      : `${activity.number}`,
     cell: ({ row }) => {
       const score =
         row.original.scores.find((s) => s.activityId === activity.id)?.value ??

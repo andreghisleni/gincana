@@ -9,11 +9,13 @@ import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { usePersistentState } from '@/hooks/use-percistent-state'
 import { trpc } from '@/lib/trpc/react'
+import { roundIfDecimals } from '@/utils/round-if-decimals'
 
-import { AllTeamsParticipated } from './all-teams-participated'
-import Loading from './loading'
+import { AllTeamsParticipated } from '../all-teams-participated'
+import Loading from '../loading'
+import { Activity } from '../page'
+import { Distance } from './distance'
 import { Objects } from './objects'
-import { Activity } from './page'
 import { Prices } from './prices'
 import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
@@ -206,6 +208,19 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                         </span>
                       </h3>
                     )}
+
+                    {activity.scoreType === 'DISTANCE' && (
+                      <h3>
+                        Diferença de distancia:{' '}
+                        <span>
+                          {roundIfDecimals(
+                            activity.scores.find((s) => s.teamId === t.id)
+                              ?.value || 0,
+                            2,
+                          )}
+                        </span>
+                      </h3>
+                    )}
                   </div>
                 ))}
               </div>
@@ -267,6 +282,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                       name: p.name,
                       price: p.price,
                     })),
+                  }}
+                />
+              )}
+
+              {activity.scoreType === 'DISTANCE' && (
+                <Distance
+                  {...{
+                    exactNumber: activity.exactValue || 0,
+                    handleFinish,
+                    setLockSelectedTeam,
                   }}
                 />
               )}

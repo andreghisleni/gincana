@@ -22,6 +22,11 @@ export async function Header() {
 
           <nav className="hidden items-center space-x-2 md:flex lg:space-x-3">
             <MenuLink href="/dashboard">Dashboard</MenuLink>
+            <MenuLink href="/scores" shouldMatchExact>
+              Scores
+            </MenuLink>
+            <MenuLink href="/scores/all">Scores all</MenuLink>
+            <MenuLink href="/scores/one-two">Scores one-two</MenuLink>
           </nav>
         </div>
 
