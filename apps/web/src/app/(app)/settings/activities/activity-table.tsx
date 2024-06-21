@@ -40,6 +40,7 @@ export const ActivitiesTable: React.FC<IProps> = ({ activities }) => {
                   pass: activity.User?.password || '',
                 },
               )}`,
+              created_at: activity.createdAt,
             })),
           }}
         />
