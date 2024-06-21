@@ -1,3 +1,11 @@
-## somatória de pontos
+## O que falta fazer
 
-criar um array com os valores dos pontos que serao computados naquela tarefa
+- A parte de denunciar
+  - Criar os tipos de denuncia
+
+- Adicionar o timer na atividade testar o tato
+
+- listagem dos usuários de bloqueio de acesso
+
+- Computação dos pontos
+
