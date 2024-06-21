@@ -52,6 +52,7 @@ export const credentialsProvider = CredentialsProvider({
       name: userExists.name,
       image: userExists.image,
       activityId: userExists.Activity?.id || null,
+      type: userExists?.type || 'DEFAULT',
     }
   },
 })

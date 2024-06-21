@@ -26,6 +26,7 @@ export const authConfig = {
     jwt({ token, user, session, trigger }) {
       if (user) {
         token.activityId = user.activityId
+        token.type = user.type
       }
 
       function isSessionAvailable(session: unknown): session is Session {
@@ -36,7 +37,12 @@ export const authConfig = {
         console.log('session', session)
         console.log('token', token)
         token.name = session.user.name
-        token = { ...token, activityId: session.user.activityId, user: session }
+        token = {
+          ...token,
+          activityId: session.user.activityId,
+          type: session.user.type,
+          user: session,
+        }
       }
 
       return token
@@ -44,6 +50,7 @@ export const authConfig = {
     session({ session, ...params }) {
       if ('token' in params && session.user) {
         session.user.activityId = params.token.activityId
+        session.user.type = params.token.type
         session.user.id = params.token.sub!
       }
 
@@ -51,6 +58,10 @@ export const authConfig = {
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
+      const isAdmin = auth?.user?.type === 'ADMIN'
+      const isActivity = auth?.user?.type === 'ACTIVITY'
+      const isDefault = auth?.user?.type === 'DEFAULT'
+      const activityId = auth?.user?.activityId
 
       const isOnPublicPages = nextUrl.pathname.startsWith('/auth')
       const isOnWebhooks = nextUrl.pathname.startsWith('/api/webhooks')
@@ -58,6 +69,9 @@ export const authConfig = {
       const isOnAPIRoutes = nextUrl.pathname.startsWith('/api')
       const isOnPrivatePages = !isOnPublicPages
       // const isOnOnboarding = nextUrl.pathname.startsWith('/onboarding')
+      const isOnPointDiscountPage =
+        nextUrl.pathname.startsWith('/point-discount')
+      const isOnActivityPage = nextUrl.pathname.startsWith('/activity')
 
       const isOnPublicPage =
         nextUrl.pathname.startsWith('/p/') ||
@@ -81,9 +95,25 @@ export const authConfig = {
       }
 
       if (isOnPrivatePages && !isLoggedIn) {
-        // Redirect user back to sign in
         return false
       }
+
+      if (isDefault && !isOnPointDiscountPage) {
+        return Response.redirect(new URL('/point-discount', nextUrl))
+      }
+
+      if (isActivity && !(isOnActivityPage || isOnPointDiscountPage)) {
+        return Response.redirect(new URL(`/activity/${activityId}`, nextUrl))
+      }
+
+      console.log('here', {
+        isActivity,
+        isDefault,
+        activityId,
+        isOnPointDiscountPage,
+        isOnActivityPage,
+        type: auth?.user?.type,
+      })
 
       // if (
       //   isLoggedIn &&

@@ -16,6 +16,8 @@ model User {
   passwordHash String  @map("password_hash")
   password     String?
 
+  type UserType @default(DEFAULT)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -23,6 +25,12 @@ model User {
   Activity   Activity? @relation(fields: [activityId], references: [id])
 
   @@map("users")
+}
+
+enum UserType {
+  DEFAULT
+  ACTIVITY
+  ADMIN
 }
 
 model Activity {
@@ -48,6 +56,7 @@ model Activity {
 
   User     User?
   products ActivityProduct[]
+  groups   ActivityGroup[]
 
   @@map("activities")
 }
@@ -82,6 +91,18 @@ model ActivityProduct {
 
   @@unique([activityId, name])
   @@map("activity_products")
+}
+
+model ActivityGroup {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  activities Activity[]
+
+  @@map("activity_groups")
 }
 
 model Team {

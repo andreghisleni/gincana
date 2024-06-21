@@ -1,5 +1,7 @@
+import { auth } from '@gincana/auth'
 import { RouterOutput } from '@gincana/trpc'
 import { unstable_noStore } from 'next/cache'
+import { redirect, RedirectType } from 'next/navigation'
 import { z } from 'zod'
 
 import { serverClient } from '@/lib/trpc/server'
@@ -26,6 +28,18 @@ export default async function ActivityPage(p: ActivityPageProps) {
   }
 
   const { id } = props.data.params
+  const session = await auth()
+
+  if (!session) {
+    return <div>Not authenticated</div>
+  }
+
+  if (!!session.user.activityId && session.user.activityId !== id) {
+    return redirect(
+      `/activity/${session.user.activityId}`,
+      RedirectType.replace,
+    )
+  }
 
   const { activity } = await serverClient.getActivity(id)
 
