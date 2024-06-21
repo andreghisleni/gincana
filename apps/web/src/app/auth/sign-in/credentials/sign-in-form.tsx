@@ -66,7 +66,12 @@ export function SignInForm({ user, pass }: { user?: string; pass?: string }) {
     <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="userName">Nome de usuário</Label>
-        <Input id="userName" type="userName" {...register('userName')} />
+        <Input
+          id="userName"
+          type="text"
+          placeholder="Nome do usuário"
+          {...register('userName')}
+        />
         {errors.userName && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.userName.message}
@@ -76,7 +81,12 @@ export function SignInForm({ user, pass }: { user?: string; pass?: string }) {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register('password')} />
+        <Input
+          id="password"
+          type="password"
+          placeholder="Senha"
+          {...register('password')}
+        />
         {errors.password && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.password.message}

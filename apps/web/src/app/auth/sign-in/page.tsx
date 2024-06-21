@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { z } from 'zod'
 
 import { SignInForm } from './credentials/sign-in-form'
@@ -50,6 +51,19 @@ export default async function SignInPage({
         </div>
         <div>
           <SignInForm />
+
+          <div className="mt-8 flex flex-col items-center gap-2">
+            <h1 className="text-lg font-bold">Não tem uma conta?</h1>
+            <h2 className="text-base">
+              Ou não vai ficar em uma atividade especifica?
+            </h2>
+            <span>
+              Crie uma conta{' '}
+              <Link href="/auth/register" className="font-bold">
+                Clicando aqui!
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>

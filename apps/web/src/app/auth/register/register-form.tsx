@@ -60,7 +60,12 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
-        <Input id="name" type="text" {...register('name')} />
+        <Input
+          id="name"
+          type="text"
+          placeholder="Seu nome"
+          {...register('name')}
+        />
         {errors.name && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.name.message}
@@ -70,7 +75,12 @@ export function RegisterForm() {
 
       <div className="space-y-2">
         <Label htmlFor="userName">Nome de usuário</Label>
-        <Input id="userName" type="userName" {...register('userName')} />
+        <Input
+          id="userName"
+          type="text"
+          placeholder="Nome do usuário"
+          {...register('userName')}
+        />
         {errors.userName && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.userName.message}
@@ -80,7 +90,12 @@ export function RegisterForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register('password')} />
+        <Input
+          id="password"
+          type="password"
+          placeholder="Sua senha"
+          {...register('password')}
+        />
         {errors.password && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.password.message}

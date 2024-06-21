@@ -14,6 +14,16 @@ export const usersRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          userName: input.userName,
+        },
+      })
+
+      if (existingUser) {
+        throw new Error('User already exists')
+      }
+
       const hashedPassword = await hash(input.password, 10)
 
       const user = await prisma.user.create({

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
 
-export function ShowJson({ data }: { data: any }) { // eslint-disable-line
+export default function SJ({ data }: { data: any }) { // eslint-disable-line
   const [code, setCode] = useState('')
 
   useEffect(() => {
