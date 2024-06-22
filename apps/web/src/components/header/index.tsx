@@ -14,14 +14,15 @@ export async function Header() {
 
   return (
     <div className="border-b">
-      <div className="flex h-[4.25rem] items-center justify-between px-8 ">
-        <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-center px-8 sm:h-[4.25rem] sm:justify-between ">
+        <div className="flex flex-col items-center gap-4 space-x-4 sm:flex-row sm:gap-0">
           <h1 className="text-xl">Gincana</h1>
 
-          <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="hidden h-6 sm:block" />
+          <Separator orientation="horizontal" className="sm:hidden" />
 
           {session.user.type === 'ADMIN' && (
-            <nav className="hidden items-center space-x-2 md:flex lg:space-x-3">
+            <nav className="flex flex-col items-center space-x-2 sm:flex-row lg:space-x-3">
               <MenuLink href="/dashboard">Dashboard</MenuLink>
               <MenuLink href="/scores" shouldMatchExact>
                 Scores
@@ -31,7 +32,7 @@ export async function Header() {
             </nav>
           )}
           {session.user.type === 'ACTIVITY' && (
-            <nav className="hidden items-center space-x-2 md:flex lg:space-x-3">
+            <nav className="flex flex-col items-center space-x-2 sm:flex-row lg:space-x-3">
               <MenuLink href={`/activity/${session.user.activityId}`}>
                 Atividade
               </MenuLink>
@@ -40,7 +41,7 @@ export async function Header() {
           )}
         </div>
 
-        <div className="hidden items-center space-x-4 md:flex">
+        <div className="hidden items-center space-x-4 sm:flex">
           <Separator orientation="vertical" className="h-6" />
 
           <ThemeSwitcher />
