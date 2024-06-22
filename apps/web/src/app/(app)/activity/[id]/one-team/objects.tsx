@@ -4,8 +4,11 @@ import { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/components/ui/use-toast'
 import { usePersistentState } from '@/hooks/use-percistent-state'
+
+import { TimerInvert } from './timer-invert'
 
 export function Objects({
   handleFinish,
@@ -73,6 +76,11 @@ export function Objects({
       >
         Cancelar
       </Button>
+
+      <Separator />
+
+      <h2 className="text-lg">Timer:</h2>
+      <TimerInvert setLockSelectedTeam={setLockSelectedTeam} />
     </div>
   )
 }

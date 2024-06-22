@@ -3,9 +3,9 @@
 [x] A parte de denunciar
   [x] Criar os tipos de denuncia
 
-- Adicionar o timer na atividade testar o tato
+[x] Adicionar o timer na atividade testar o tato
 
-- listagem dos usuários de bloqueio de acesso
+[x] listagem dos usuários de bloqueio de acesso
 
 - Computação dos pontos
 
