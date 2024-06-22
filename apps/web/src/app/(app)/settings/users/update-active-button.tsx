@@ -31,10 +31,6 @@ export function UpdateActiveButton({ id, isActive, refetch }: IProps) {
     })
 
   async function handleUpdateUserActive() {
-    toast({
-      title: 'Aguarde',
-      description: 'Atualizando usuário',
-    })
     await updateUserActive({
       userId: id,
     })

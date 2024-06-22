@@ -30,10 +30,6 @@ export function UpdateUserTypeSelector({ id, type, refetch }: IProps) {
   })
 
   async function handleUpdateUserActive(t: 'ADMIN' | 'DEFAULT') {
-    toast({
-      title: 'Aguarde',
-      description: 'Atualizando usuário',
-    })
     await mutateAsync({
       userId: id,
       type: t,
