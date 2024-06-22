@@ -47,6 +47,16 @@ export const usersRouter = createTRPCRouter({
     return user
   }),
 
+  getUsers: protectedProcedure.query(async () => {
+    const users = await prisma.user.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    })
+
+    return { users }
+  }),
+
   createUserWithActivity: protectedProcedure
     .input(
       z.object({
@@ -87,9 +97,85 @@ export const usersRouter = createTRPCRouter({
           passwordHash: hashedPassword,
           activityId: input.activityId,
           password,
+          type: 'ACTIVITY',
         },
       })
 
       return user
+    }),
+
+  updateUserActive: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.session.user.id === input.userId) {
+        throw new Error('You cannot deactivate yourself')
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: input.userId,
+        },
+      })
+
+      if (!user) {
+        throw new Error('User not found')
+      }
+
+      if (user.userName === 'andre') {
+        throw new Error('You cannot deactivate the admin user')
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          isActive: !user.isActive,
+        },
+      })
+
+      return updatedUser
+    }),
+
+  updateUserType: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        type: z.enum(['ADMIN', 'DEFAULT']),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.session.user.id === input.userId) {
+        throw new Error('You cannot change your own type')
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: input.userId,
+        },
+      })
+
+      if (!user) {
+        throw new Error('User not found')
+      }
+
+      if (user.userName === 'andre') {
+        throw new Error('You cannot change the type of the admin user')
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          type: input.type,
+        },
+      })
+
+      return updatedUser
     }),
 })

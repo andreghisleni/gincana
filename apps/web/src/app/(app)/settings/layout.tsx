@@ -21,6 +21,10 @@ export default async function Layout({ children }: { children: ReactNode }) {
                 <User2 className="mr-2 size-4" />
                 Profile
               </AsideLink>
+              <AsideLink href="/settings/users">
+                <Users className="mr-2 size-4" />
+                Users
+              </AsideLink>
               <AsideLink href="/settings/activities">
                 <Activity className="mr-2 size-4" />
                 Atividades
@@ -31,7 +35,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
               </AsideLink>
               <AsideLink href="/settings/report-motives">
                 <MessageCircleWarning className="mr-2 size-4" />
-                Motivos de denúncia
+                Denúncias
               </AsideLink>
             </div>
             {/* <div className="flex flex-col gap-1">
