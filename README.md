@@ -1,7 +1,7 @@
 ## O que falta fazer
 
-- A parte de denunciar
-  - Criar os tipos de denuncia
+[x] A parte de denunciar
+  [x] Criar os tipos de denuncia
 
 - Adicionar o timer na atividade testar o tato
 

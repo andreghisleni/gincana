@@ -32,6 +32,7 @@ export const ScoresTable: React.FC<IProps> = ({ teams, activities, title }) => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Nome da equipe</TableHead>
+              <TableHead className="w-[100px] text-center">N Reports</TableHead>
               {activities.map((activity) => {
                 if (activity.number) {
                   return (
@@ -60,6 +61,9 @@ export const ScoresTable: React.FC<IProps> = ({ teams, activities, title }) => {
             {teams.map((team) => (
               <TableRow key={team.id}>
                 <TableCell>{team.name}</TableCell>
+                <TableCell className="text-center">
+                  {team.reports.length}
+                </TableCell>
                 {activities.map((activity) => {
                   const score =
                     team.scores.find((s) => s.activityId === activity.id)

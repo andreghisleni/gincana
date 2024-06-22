@@ -1,4 +1,4 @@
-import { Activity, User2, Users } from 'lucide-react'
+import { Activity, MessageCircleWarning, User2, Users } from 'lucide-react'
 import { ReactNode } from 'react'
 
 import { Screen } from '@/components/screen'
@@ -28,6 +28,10 @@ export default async function Layout({ children }: { children: ReactNode }) {
               <AsideLink href="/settings/teams">
                 <Users className="mr-2 size-4" />
                 Equipes
+              </AsideLink>
+              <AsideLink href="/settings/report-motives">
+                <MessageCircleWarning className="mr-2 size-4" />
+                Motivos de denúncia
               </AsideLink>
             </div>
             {/* <div className="flex flex-col gap-1">

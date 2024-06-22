@@ -23,6 +23,7 @@ model User {
 
   activityId String?   @unique @map("activity_id")
   Activity   Activity? @relation(fields: [activityId], references: [id])
+  reports    Report[]
 
   @@map("users")
 }
@@ -113,7 +114,8 @@ model Team {
   updatedAt DateTime @updatedAt @map("updated_at")
   scores    Score[]
 
-  scoresWithMultipleTeams Score[] @relation("ScoreToTeams")
+  scoresWithMultipleTeams Score[]  @relation("ScoreToTeams")
+  reports                 Report[]
 
   @@map("teams")
 }
@@ -135,4 +137,37 @@ model Score {
 
   @@unique([activityId, teamId])
   @@map("scores")
+}
+
+model ReportMotive {
+  id            String  @id @default(uuid())
+  name          String  @unique
+  description   String?
+  discountPoint Float   @map("discount_pontuation")
+
+  reports Report[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("report_motives")
+}
+
+model Report {
+  id          String  @id @default(uuid())
+  description String?
+
+  motiveId String       @map("motive_id")
+  motive   ReportMotive @relation(fields: [motiveId], references: [id])
+
+  spyId String @map("spy_id")
+  spy   User   @relation(fields: [spyId], references: [id])
+
+  teamId String @map("team_id")
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reports")
 }

@@ -41,6 +41,7 @@ export const teamsRouter = createTRPCRouter({
       },
       include: {
         scores: true,
+        reports: true,
       },
     })
 
