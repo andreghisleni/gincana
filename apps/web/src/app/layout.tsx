@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-br" className={inter.variable} suppressHydrationWarning>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
       <body className="overflow-y-hidden antialiased">
         <Providers>
           {children}

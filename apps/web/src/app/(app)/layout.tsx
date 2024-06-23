@@ -16,12 +16,16 @@ export default async function AppLayout({
           <Providers>{children}</Providers>
         </main>
       </div>
-      <div className="h-screen overflow-hidden sm:hidden">
-        <main className="flex h-full max-h-[calc(100vh-57px)] flex-1 flex-col gap-4 overflow-auto p-4 sm:mt-4">
+      <div className="flex h-screen flex-col overflow-hidden">
+        <main className="flex-grow space-y-4 overflow-auto">
           <OtherHeader />
           <Providers>{children}</Providers>
-        </main>{' '}
-        <Header className="bottom-0 border-b-0 border-t" inverted />
+          <div className="h-20" />
+        </main>
+        <Header
+          className="fixed bottom-0 left-0 z-50 h-16 w-full border-t bg-background"
+          inverted
+        />
       </div>
     </>
   )
