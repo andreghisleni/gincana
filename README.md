@@ -7,5 +7,7 @@
 
 [x] listagem dos usuários de bloqueio de acesso
 
+[ ] Ajustar responsividade para o aplicativo
+
 - Computação dos pontos
 
