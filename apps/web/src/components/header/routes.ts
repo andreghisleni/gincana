@@ -7,7 +7,11 @@ export const routes = ({ activityId }: { activityId: string | null }) => ({
   ],
   ACTIVITY: [
     { href: `/activity/${activityId}`, title: 'Atividade' },
+    { href: '/vote', title: 'Votar' },
     { href: '/point-discount', title: 'Denunciar' },
   ],
-  DEFAULT: [],
+  DEFAULT: [
+    { href: '/point-discount', title: 'Denunciar' },
+    { href: '/vote', title: 'Votar' },
+  ],
 })
