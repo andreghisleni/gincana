@@ -7,6 +7,12 @@ export const scoresRouter = createTRPCRouter({
   createScore: protectedProcedure
     .input(scoreSchema)
     .mutation(async ({ input }) => {
+      const settings = await prisma.settings.findFirst()
+
+      if (!settings?.saveScore) {
+        throw new Error('Save score is disabled')
+      }
+
       const team = await prisma.team.findUnique({
         where: {
           id: input.teamId,

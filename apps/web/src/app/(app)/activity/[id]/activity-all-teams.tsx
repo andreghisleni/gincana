@@ -152,124 +152,128 @@ export function ActivityAllTeams({ activity, refetch }: ActivityAllTeamsProps) {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="flex w-full max-w-lg flex-col gap-4 border p-4">
-        <h1 className=" text-xl">Atividade: {activity.title}</h1>
-        <Separator orientation="horizontal" />
+    <Screen>
+      <div className="flex justify-center">
+        <div className="flex w-full max-w-lg flex-col gap-4 border p-4">
+          <h1 className=" text-xl">Atividade: {activity.title}</h1>
+          <Separator orientation="horizontal" />
 
-        {createScore.isPending && (
-          <div className="flex flex-col items-center gap-2">
-            <Loading />
-            <span>Enviando pontuação...</span>
-          </div>
-        )}
+          {createScore.isPending && (
+            <div className="flex flex-col items-center gap-2">
+              <Loading />
+              <span>Enviando pontuação...</span>
+            </div>
+          )}
 
-        {!createScore.isPending && activity.scores.length <= 0 && (
-          <>
+          {!createScore.isPending && activity.scores.length <= 0 && (
+            <>
+              <div className="flex flex-col gap-4">
+                <h2 className="text-lg">Selecione as equipes na ordem</h2>
+
+                <div>
+                  <h3>Primeiro lugar</h3>
+                  <MySelect
+                    value={firstTeamId}
+                    onChange={(e) => setFirstTeamId(e as string)}
+                    options={filteredTeams([
+                      secondTeamId,
+                      thirdTeamId,
+                      fourthTeamId,
+                      fifthTeamId,
+                    ])}
+                  />
+                </div>
+
+                <div>
+                  <h3>Segundo lugar</h3>
+                  <MySelect
+                    value={secondTeamId}
+                    onChange={(e) => setSecondTeamId(e as string)}
+                    options={filteredTeams([
+                      firstTeamId,
+                      thirdTeamId,
+                      fourthTeamId,
+                      fifthTeamId,
+                    ])}
+                  />
+                </div>
+
+                <div>
+                  <h3>Terceiro lugar</h3>
+                  <MySelect
+                    value={thirdTeamId}
+                    onChange={(e) => setThirdTeamId(e as string)}
+                    options={filteredTeams([
+                      firstTeamId,
+                      secondTeamId,
+                      fourthTeamId,
+                      fifthTeamId,
+                    ])}
+                  />
+                </div>
+
+                <div>
+                  <h3>Quarto lugar</h3>
+                  <MySelect
+                    value={fourthTeamId}
+                    onChange={(e) => setFourthTeamId(e as string)}
+                    options={filteredTeams([
+                      firstTeamId,
+                      secondTeamId,
+                      thirdTeamId,
+                      fifthTeamId,
+                    ])}
+                  />
+                </div>
+
+                <div>
+                  <h3>Quinto lugar</h3>
+                  <MySelect
+                    value={fifthTeamId}
+                    onChange={(e) => setFifthTeamId(e as string)}
+                    options={filteredTeams([
+                      firstTeamId,
+                      secondTeamId,
+                      thirdTeamId,
+                      fourthTeamId,
+                    ])}
+                  />
+                </div>
+
+                <Separator orientation="horizontal" />
+
+                <Button onClick={() => handleFinish()}>
+                  Cadastrar pontuação
+                </Button>
+              </div>
+            </>
+          )}
+
+          {activity.scores.length > 0 && (
             <div className="flex flex-col gap-4">
-              <h2 className="text-lg">Selecione as equipes na ordem</h2>
+              <h2 className="text-lg">Pontuações já cadastradas</h2>
 
-              <div>
-                <h3>Primeiro lugar</h3>
-                <MySelect
-                  value={firstTeamId}
-                  onChange={(e) => setFirstTeamId(e as string)}
-                  options={filteredTeams([
-                    secondTeamId,
-                    thirdTeamId,
-                    fourthTeamId,
-                    fifthTeamId,
-                  ])}
-                />
+              <div className="flex w-full flex-col gap-4">
+                {activity.scores
+                  .sort((s1, s2) =>
+                    s1.value < s2.value ? 1 : s1.value > s2.value ? -1 : 0,
+                  )
+                  .map((s) => (
+                    <div
+                      key={s.teamId}
+                      className="flex items-center justify-between border p-2"
+                    >
+                      <h3>
+                        {teams.teams.find((t) => t.id === s.teamId)?.name}
+                      </h3>
+                      <h3>{s.value}</h3>
+                    </div>
+                  ))}
               </div>
-
-              <div>
-                <h3>Segundo lugar</h3>
-                <MySelect
-                  value={secondTeamId}
-                  onChange={(e) => setSecondTeamId(e as string)}
-                  options={filteredTeams([
-                    firstTeamId,
-                    thirdTeamId,
-                    fourthTeamId,
-                    fifthTeamId,
-                  ])}
-                />
-              </div>
-
-              <div>
-                <h3>Terceiro lugar</h3>
-                <MySelect
-                  value={thirdTeamId}
-                  onChange={(e) => setThirdTeamId(e as string)}
-                  options={filteredTeams([
-                    firstTeamId,
-                    secondTeamId,
-                    fourthTeamId,
-                    fifthTeamId,
-                  ])}
-                />
-              </div>
-
-              <div>
-                <h3>Quarto lugar</h3>
-                <MySelect
-                  value={fourthTeamId}
-                  onChange={(e) => setFourthTeamId(e as string)}
-                  options={filteredTeams([
-                    firstTeamId,
-                    secondTeamId,
-                    thirdTeamId,
-                    fifthTeamId,
-                  ])}
-                />
-              </div>
-
-              <div>
-                <h3>Quinto lugar</h3>
-                <MySelect
-                  value={fifthTeamId}
-                  onChange={(e) => setFifthTeamId(e as string)}
-                  options={filteredTeams([
-                    firstTeamId,
-                    secondTeamId,
-                    thirdTeamId,
-                    fourthTeamId,
-                  ])}
-                />
-              </div>
-
-              <Separator orientation="horizontal" />
-
-              <Button onClick={() => handleFinish()}>
-                Cadastrar pontuação
-              </Button>
             </div>
-          </>
-        )}
-
-        {activity.scores.length > 0 && (
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg">Pontuações já cadastradas</h2>
-
-            <div className="flex w-full flex-col gap-4">
-              {activity.scores
-                .sort((s1, s2) =>
-                  s1.value < s2.value ? 1 : s1.value > s2.value ? -1 : 0,
-                )
-                .map((s) => (
-                  <div
-                    key={s.teamId}
-                    className="flex items-center justify-between border p-2"
-                  >
-                    <h3>{teams.teams.find((t) => t.id === s.teamId)?.name}</h3>
-                    <h3>{s.value}</h3>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </Screen>
   )
 }

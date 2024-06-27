@@ -17,6 +17,22 @@ export default async function ScoresPage() {
   const { reportMotives } = await serverClient.getReportMotives()
   // const teams = null
 
+  const { saveReport } = await serverClient.getSettings()
+
+  if (!saveReport) {
+    return (
+      <div className="flex justify-center">
+        <div className="flex w-full max-w-lg flex-col gap-4 border p-4">
+          <h1 className="text-xl">Denunciar quebra das regras</h1>
+          <Separator orientation="horizontal" />
+          <h1 className="text-center text-4xl">
+            A denuncia está desabilitada no momento
+          </h1>
+        </div>
+      </div>
+    )
+  }
+
   if (!teams) {
     return (
       <div className="flex justify-center">

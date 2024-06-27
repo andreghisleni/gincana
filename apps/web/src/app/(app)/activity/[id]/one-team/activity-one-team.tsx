@@ -16,6 +16,7 @@ import Loading from '../loading'
 import { Activity } from '../page'
 import { Distance } from './distance'
 import { Objects } from './objects'
+import { Points } from './points'
 import { Prices } from './prices'
 import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
@@ -221,6 +222,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                         </span>
                       </h3>
                     )}
+
+                    {activity.scoreType === 'POINTS' && (
+                      <h3>
+                        Pontos:{' '}
+                        <span>
+                          {activity.scores.find((s) => s.teamId === t.id)
+                            ?.value || 0}
+                        </span>
+                      </h3>
+                    )}
                   </div>
                 ))}
               </div>
@@ -290,6 +301,16 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
                 <Distance
                   {...{
                     exactNumber: activity.exactValue || 0,
+                    handleFinish,
+                    setLockSelectedTeam,
+                  }}
+                />
+              )}
+
+              {activity.scoreType === 'POINTS' && (
+                <Points
+                  {...{
+                    numbers: activity.numbers,
                     handleFinish,
                     setLockSelectedTeam,
                   }}

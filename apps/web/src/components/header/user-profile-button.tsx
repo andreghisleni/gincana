@@ -43,7 +43,7 @@ export async function UserProfileButton() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         {session?.user.type === 'ADMIN' && (
           <DropdownMenuItem className="flex items-center gap-2" asChild>
-            <Link href="/settings/profile" className="w-full">
+            <Link href="/settings" className="w-full">
               <Cog className="size-4" />
               Settings
             </Link>

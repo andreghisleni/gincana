@@ -178,4 +178,10 @@ export const usersRouter = createTRPCRouter({
 
       return updatedUser
     }),
+
+  getTotalUsers: protectedProcedure.query(async () => {
+    const totalUsers = await prisma.user.count()
+
+    return { totalUsers }
+  }),
 })

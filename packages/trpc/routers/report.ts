@@ -7,6 +7,12 @@ export const reportsRouter = createTRPCRouter({
   createReport: protectedProcedure
     .input(reportSchema)
     .mutation(async ({ input, ctx }) => {
+      const settings = await prisma.settings.findFirst()
+
+      if (!settings?.saveReport) {
+        throw new Error('Save report is disabled')
+      }
+
       const spyId = ctx.session.user.id
 
       if (!spyId) {

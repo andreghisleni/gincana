@@ -4,6 +4,7 @@ import { unstable_noStore } from 'next/cache'
 import { redirect, RedirectType } from 'next/navigation'
 import { z } from 'zod'
 
+import { Separator } from '@/components/ui/separator'
 import { serverClient } from '@/lib/trpc/server'
 
 import { ActivityP } from './activity'
@@ -45,6 +46,22 @@ export default async function ActivityPage(p: ActivityPageProps) {
 
   if (!activity) {
     return <div>Activity not found</div>
+  }
+
+  const { saveScore } = await serverClient.getSettings()
+
+  if (!saveScore) {
+    return (
+      <div className="flex justify-center">
+        <div className="flex w-full max-w-lg flex-col gap-4 border p-4">
+          <h1 className="text-xl">Atividade: {activity.title}</h1>
+          <Separator orientation="horizontal" />
+          <h1 className="text-center text-4xl">
+            O cadastro de pontuação está desabilitado no momento
+          </h1>
+        </div>
+      </div>
+    )
   }
 
   return <ActivityP activity={activity} />

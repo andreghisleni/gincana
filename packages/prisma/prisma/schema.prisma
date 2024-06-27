@@ -26,6 +26,7 @@ model User {
   activityId String?   @unique @map("activity_id")
   Activity   Activity? @relation(fields: [activityId], references: [id])
   reports    Report[]
+  votes      Vote[]
 
   @@map("users")
 }
@@ -118,6 +119,7 @@ model Team {
 
   scoresWithMultipleTeams Score[]  @relation("ScoreToTeams")
   reports                 Report[]
+  votes                   Vote[]
 
   @@map("teams")
 }
@@ -172,4 +174,40 @@ model Report {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("reports")
+}
+
+model Vote {
+  id String @id @default(uuid())
+
+  type VoteType
+
+  teamId String @map("team_id")
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  electorId String @map("elector_id")
+  elector   User   @relation(fields: [electorId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([teamId, electorId, type])
+  @@map("votes")
+}
+
+enum VoteType {
+  ANIMATED
+  ORGANIZED
+}
+
+model Settings {
+  id String @id @default(uuid())
+
+  saveScore  Boolean @default(true) @map("save_score")
+  saveReport Boolean @default(true) @map("save_report")
+  saveVote   Boolean @default(false) @map("save_vote")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
 }

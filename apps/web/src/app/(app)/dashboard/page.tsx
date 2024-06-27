@@ -6,6 +6,8 @@ import { TotalActivities } from '@/components/summary/total-activities'
 import { TotalReports } from '@/components/summary/total-reports'
 import { TotalScores } from '@/components/summary/total-scores'
 import { TotalTeams } from '@/components/summary/total-teams'
+import { TotalUsers } from '@/components/summary/total-users'
+import { TotalVotes } from '@/components/summary/total-votes'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -36,6 +38,16 @@ export default function DashboardPage() {
         <div className="col-span-2">
           <Suspense fallback={<Loading />}>
             <TotalReports />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense fallback={<Loading />}>
+            <TotalVotes />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense fallback={<Loading />}>
+            <TotalUsers />
           </Suspense>
         </div>
       </div>
