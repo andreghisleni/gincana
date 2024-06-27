@@ -72,6 +72,7 @@ export const authConfig = {
       const isOnPointDiscountPage =
         nextUrl.pathname.startsWith('/point-discount')
       const isOnActivityPage = nextUrl.pathname.startsWith('/activity')
+      const isOnVotePage = nextUrl.pathname.startsWith('/vote')
 
       const isOnPublicPage =
         nextUrl.pathname.startsWith('/p/') ||
@@ -98,11 +99,14 @@ export const authConfig = {
         return false
       }
 
-      if (isDefault && !isOnPointDiscountPage) {
+      if (isDefault && !(isOnPointDiscountPage || isOnVotePage)) {
         return Response.redirect(new URL('/point-discount', nextUrl))
       }
 
-      if (isActivity && !(isOnActivityPage || isOnPointDiscountPage)) {
+      if (
+        isActivity &&
+        !(isOnActivityPage || isOnPointDiscountPage || isOnVotePage)
+      ) {
         return Response.redirect(new URL(`/activity/${activityId}`, nextUrl))
       }
 
@@ -112,6 +116,7 @@ export const authConfig = {
         activityId,
         isOnPointDiscountPage,
         isOnActivityPage,
+        isOnVotePage,
         type: auth?.user?.type,
       })
 
