@@ -4,6 +4,8 @@ export const routes = ({ activityId }: { activityId: string | null }) => ({
     { href: '/scores', shouldMatchExact: true, title: 'Scores' },
     { href: '/scores/all', title: 'Scores all' },
     { href: '/scores/one-two', title: 'Scores one-two' },
+    { href: '/score-with-points', title: 'Score points' },
+    { href: '/final-votes', title: 'Votos' },
   ],
   ACTIVITY: [
     { href: `/activity/${activityId}`, title: 'Atividade' },
