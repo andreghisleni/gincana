@@ -80,6 +80,7 @@ export function Distance({
       <Button
         onClick={() => {
           setNumberOfDistance(null)
+          setLockSelectedTeam(false)
         }}
         disabled={numberOfDistance === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"

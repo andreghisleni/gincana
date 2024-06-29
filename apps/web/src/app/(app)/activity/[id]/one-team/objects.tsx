@@ -70,6 +70,7 @@ export function Objects({
       <Button
         onClick={() => {
           setNumberOfObjects(null)
+          setLockSelectedTeam(false)
         }}
         disabled={numberOfObjects === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"

@@ -171,6 +171,7 @@ export function Prices({
       <Button
         onClick={() => {
           setTeamPrices(null)
+          setLockSelectedTeam(false)
         }}
         disabled={teamPrices === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"

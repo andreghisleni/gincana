@@ -68,6 +68,7 @@ export function Points({
       <Button
         onClick={() => {
           setNumberOfPoints(null)
+          setLockSelectedTeam(false)
         }}
         disabled={numberOfPoints === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"

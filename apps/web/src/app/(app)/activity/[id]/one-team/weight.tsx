@@ -79,6 +79,7 @@ export function Weight({
       <Button
         onClick={() => {
           setNumberOfWeight(null)
+          setLockSelectedTeam(false)
         }}
         disabled={numberOfWeight === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"
