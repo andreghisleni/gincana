@@ -125,6 +125,7 @@ export function SunOfPoints({
       <Button
         onClick={() => {
           setPoints(null)
+          setLockSelectedTeam(false)
         }}
         disabled={points === null}
         className="w-full bg-red-500 text-white dark:bg-red-500 dark:text-white"
