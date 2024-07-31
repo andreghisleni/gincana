@@ -4,7 +4,7 @@ import { activitySchema, ScoreOrdination, ScoreType } from '@gincana/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import z from 'zod'
 
 import { ReactSelect } from '@/components/Select'
@@ -25,6 +25,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/lib/trpc/react'
 
@@ -60,6 +61,7 @@ export function ActivityForm({
           ...activity,
           defaultScore: activity.defaultScore || undefined,
           scoreDescription: activity.scoreDescription || undefined,
+          exactValue: activity.exactValue || undefined,
         }
       : undefined,
   })
@@ -129,6 +131,77 @@ export function ActivityForm({
     }
   }, [isOpen, form])
 
+  function pasted(event: React.ClipboardEvent) {
+    const clipboardData = event.clipboardData
+    const pastedData = clipboardData?.getData('Text')
+
+    if (pastedData) {
+      const data = pastedData.split('	')
+
+      if (data.length === 5) {
+        const [title, description, scoreDescription, numberOfTeams, score] =
+          data
+
+        form.setValue('title', title)
+        form.setValue('description', description)
+        form.setValue('scoreDescription', scoreDescription)
+        form.setValue(
+          'numberOfTeams',
+          numberOfTeams === 'todas' ? 0 : Number(numberOfTeams),
+        )
+        const scoreOptions = [
+          'maior tempo',
+          'x de pontos',
+          'menor tempo',
+          'somatoria de pontos',
+        ]
+
+        if (scoreOptions.includes(score)) {
+          switch (score) {
+            case 'maior tempo':
+              form.setValue('scoreType', 'TIME')
+              form.setValue('scoreOrdination', 'BIGGER')
+              break
+            case 'menor tempo':
+              form.setValue('scoreType', 'TIME')
+              form.setValue('scoreOrdination', 'SMALLER')
+              break
+            case 'x de pontos':
+              form.setValue('scoreType', 'POINTS')
+              form.setValue('scoreOrdination', 'NONE')
+              form.setValue('defaultScore', 10)
+              break
+            case 'somatoria de pontos':
+              form.setValue('scoreType', 'NUMBER')
+              form.setValue('scoreOrdination', 'BIGGER')
+              break
+          }
+        }
+
+        //
+      }
+
+      // console.log(data)
+    }
+  }
+
+  // form.watch('title') && console.log(form.watch('title').split(''))
+
+  const zodArrays = Object.keys(activitySchema.shape).filter((fieldName) => {
+    const fieldSchema = activitySchema.shape[fieldName]
+
+    return fieldSchema._def.innerType?._def.typeName === 'ZodArray'
+  })
+
+  const zodArraysForm = zodArrays
+    .map((fieldName) => ({
+      [fieldName]: useFieldArray({ // eslint-disable-line
+        control: form.control,
+        name: fieldName as never,
+      }),
+    }))
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
@@ -141,14 +214,19 @@ export function ActivityForm({
           </SheetTitle>
         </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* <pre>
-              {JSON.stringify(Object.keys(activitySchema.shape), null, 2)}
-            </pre> */}
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+            onPaste={pasted}
+          >
+            <pre>{JSON.stringify({ zodArraysForm }, null, 2)}</pre>
 
             {Object.keys(activitySchema.shape).map((fieldName) => {
               const fieldSchema = activitySchema.shape[fieldName]
               const label = fieldSchema._def.description // Obtém a descrição do campo
+              const fieldMin = fieldSchema._def?.checks?.find(
+                (c) => c.kind === 'min',
+              )?.value // Obtém o valor mínimo do campo (se houver)
 
               if (fieldSchema._def.typeName === 'ZodEnum') {
                 const v: { value: string; label: string }[] = values[fieldName]
@@ -197,7 +275,11 @@ export function ActivityForm({
                       <FormItem>
                         <FormLabel>{label}</FormLabel>
                         <FormControl>
-                          <Input placeholder={label} {...field} />
+                          {fieldMin === 10 ? (
+                            <Textarea placeholder={label} {...field} />
+                          ) : (
+                            <Input placeholder={label} {...field} />
+                          )}
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -220,12 +302,62 @@ export function ActivityForm({
                         <FormItem>
                           <FormLabel>{label}</FormLabel>
                           <FormControl>
-                            <Input placeholder={label} {...field} />
+                            {fieldMin === 10 ? (
+                              <Textarea placeholder={label} {...field} />
+                            ) : (
+                              <Input placeholder={label} {...field} />
+                            )}
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  )
+                }
+
+                if (fieldSchema._def.innerType._def.typeName === 'ZodArray') {
+                  const { append, fields, remove } = zodArraysForm[fieldName]
+                  return (
+                    <>
+                      <Button type="button" onClick={() => append(0)}>
+                        Adicionar {label}
+                      </Button>
+                      {form.formState.errors[fieldName] && (
+                        <FormMessage>
+                          {form.formState.errors[fieldName].message}
+                        </FormMessage>
+                      )}
+
+                      {fields.map((field, index) => (
+                        <FormField
+                          key={field.id}
+                          control={form.control}
+                          name={
+                            `${fieldName}.${index}` as unknown as keyof typeof activitySchema.shape
+                          }
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {label} {index + 1}
+                              </FormLabel>
+                              <FormControl>
+                                <div className="flex gap-4">
+                                  <Input placeholder={label} {...field} />
+                                  <Button
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                    disabled={fields.length === 1}
+                                  >
+                                    Remover
+                                  </Button>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </>
                   )
                 }
               }

@@ -1,2 +1,7 @@
 export * from './src/activity'
 export * from './src/teams'
+export * from './src/score'
+export * from './src/report-motive'
+export * from './src/report'
+export * from './src/setting'
+export * from './src/vote'

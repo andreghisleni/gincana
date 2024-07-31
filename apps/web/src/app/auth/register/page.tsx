@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 
 import { RegisterForm } from './register-form'
 
@@ -19,6 +20,12 @@ export default function SignInPage() {
         </div>
         <div>
           <RegisterForm />
+        </div>
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <span>Já tem uma conta?</span>
+          <Link href="/auth/sign-in" className="font-bold">
+            Volte para o login clicando aqui.
+          </Link>
         </div>
       </div>
     </div>

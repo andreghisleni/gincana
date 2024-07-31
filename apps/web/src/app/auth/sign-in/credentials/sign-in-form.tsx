@@ -19,7 +19,7 @@ const signInFormSchema = z.object({
 
 type SignInFormSchema = z.infer<typeof signInFormSchema>
 
-export function SignInForm() {
+export function SignInForm({ user, pass }: { user?: string; pass?: string }) {
   const { toast } = useToast()
   const router = useRouter()
   const {
@@ -29,8 +29,8 @@ export function SignInForm() {
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      userName: '',
-      password: '',
+      userName: user || '',
+      password: pass || '',
     },
   })
 
@@ -40,8 +40,8 @@ export function SignInForm() {
     const response = await signIn('credentials', {
       userName,
       password,
-      // redirect: false,
-      // callbackUrl: '/',
+      redirect: false,
+      callbackUrl: '/',
     })
 
     if (response?.error) {
@@ -57,6 +57,7 @@ export function SignInForm() {
         title: 'Bem-vindo!',
         description: 'Você foi autenticado com sucesso.',
       })
+
       router.push('/')
     }
   }
@@ -65,7 +66,12 @@ export function SignInForm() {
     <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="userName">Nome de usuário</Label>
-        <Input id="userName" type="userName" {...register('userName')} />
+        <Input
+          id="userName"
+          type="text"
+          placeholder="Nome do usuário"
+          {...register('userName')}
+        />
         {errors.userName && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.userName.message}
@@ -75,7 +81,12 @@ export function SignInForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register('password')} />
+        <Input
+          id="password"
+          type="password"
+          placeholder="Senha"
+          {...register('password')}
+        />
         {errors.password && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.password.message}

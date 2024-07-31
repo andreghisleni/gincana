@@ -41,12 +41,14 @@ export async function UserProfileButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuItem className="flex items-center gap-2" asChild>
-          <Link href="/settings/profile" className="w-full">
-            <Cog className="size-4" />
-            Settings
-          </Link>
-        </DropdownMenuItem>
+        {session?.user.type === 'ADMIN' && (
+          <DropdownMenuItem className="flex items-center gap-2" asChild>
+            <Link href="/settings" className="w-full">
+              <Cog className="size-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+        )}
         {/* <DropdownMenuItem className="flex items-center gap-2" asChild>
           <Link href="/settings/developers" className="w-full">
             <Code className="size-4" />

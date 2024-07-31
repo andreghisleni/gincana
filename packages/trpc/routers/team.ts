@@ -35,9 +35,24 @@ export const teamsRouter = createTRPCRouter({
   }),
 
   getTeams: protectedProcedure.query(async () => {
-    const teams = await prisma.team.findMany()
+    const teams = await prisma.team.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+      include: {
+        scores: true,
+        reports: true,
+        votes: true,
+      },
+    })
 
     return { teams }
+  }),
+
+  getTotalTeams: protectedProcedure.query(async () => {
+    const totalTeams = await prisma.team.count()
+
+    return { totalTeams }
   }),
 
   updateTeam: protectedProcedure

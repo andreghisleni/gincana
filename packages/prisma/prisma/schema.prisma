@@ -16,17 +16,30 @@ model User {
   passwordHash String  @map("password_hash")
   password     String?
 
+  type UserType @default(DEFAULT)
+
+  isActive Boolean @default(true) @map("is_active")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   activityId String?   @unique @map("activity_id")
   Activity   Activity? @relation(fields: [activityId], references: [id])
+  reports    Report[]
+  votes      Vote[]
 
   @@map("users")
 }
 
+enum UserType {
+  DEFAULT
+  ACTIVITY
+  ADMIN
+}
+
 model Activity {
   id          String @id @default(uuid())
+  number      Int?   @unique
   title       String
   description String
 
@@ -35,23 +48,31 @@ model Activity {
   scoreDescription String?         @map("score_description")
   defaultScore     Float?          @map("default_score")
 
+  exactValue Float? @map("exact_value")
+
+  numbers Int[] @map("numbers")
+
   numberOfTeams Int @map("number_of_teams")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  Score     Score[]
+  scores    Score[]
 
-  User User?
+  User     User?
+  products ActivityProduct[]
+  groups   ActivityGroup[]
 
   @@map("activities")
 }
 
 enum ScoreType {
   NUMBER
+  OBJECTS
   TIME
   DISTANCE
   WEIGHT
   POINTS
+  PRICE
 }
 
 enum ScoreOrdination {
@@ -61,6 +82,33 @@ enum ScoreOrdination {
   CLOSER
 }
 
+model ActivityProduct {
+  id    String @id @default(uuid())
+  name  String
+  price Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  activityId String   @map("activity_id")
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([activityId, name])
+  @@map("activity_products")
+}
+
+model ActivityGroup {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  activities Activity[]
+
+  @@map("activity_groups")
+}
+
 model Team {
   id   String @id @default(uuid())
   name String
@@ -68,6 +116,10 @@ model Team {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   scores    Score[]
+
+  scoresWithMultipleTeams Score[]  @relation("ScoreToTeams")
+  reports                 Report[]
+  votes                   Vote[]
 
   @@map("teams")
 }
@@ -82,9 +134,80 @@ model Score {
   teamId String @map("team_id")
   team   Team   @relation(fields: [teamId], references: [id])
 
+  scoresWithMultipleTeams Team[] @relation("ScoreToTeams")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([activityId, teamId])
   @@map("scores")
+}
+
+model ReportMotive {
+  id            String  @id @default(uuid())
+  name          String  @unique
+  description   String?
+  discountPoint Float   @map("discount_pontuation")
+
+  reports Report[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("report_motives")
+}
+
+model Report {
+  id          String  @id @default(uuid())
+  description String?
+
+  motiveId String       @map("motive_id")
+  motive   ReportMotive @relation(fields: [motiveId], references: [id])
+
+  spyId String @map("spy_id")
+  spy   User   @relation(fields: [spyId], references: [id])
+
+  teamId String @map("team_id")
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reports")
+}
+
+model Vote {
+  id String @id @default(uuid())
+
+  type VoteType
+
+  teamId String @map("team_id")
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  electorId String @map("elector_id")
+  elector   User   @relation(fields: [electorId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([teamId, electorId, type])
+  @@map("votes")
+}
+
+enum VoteType {
+  ANIMATED
+  ORGANIZED
+}
+
+model Settings {
+  id String @id @default(uuid())
+
+  saveScore  Boolean @default(true) @map("save_score")
+  saveReport Boolean @default(true) @map("save_report")
+  saveVote   Boolean @default(false) @map("save_vote")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
 }

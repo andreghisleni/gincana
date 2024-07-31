@@ -83,3 +83,27 @@ html.dark .shiki span {
 }
 
 .jodit-wysiwyg{height:300px !important}
+
+
+/* Estilos para WebKit (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+  @apply w-2; 
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[color:var(--background)]; 
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[color:var(--muted)] rounded; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[color:var(--muted-foreground)]; 
+}
+
+/* Estilos para Firefox */
+* {
+  scrollbar-width: thin; 
+  scrollbar-color: theme('colors.muted.foreground') theme('colors.background'); 
+}

@@ -1,5 +1,6 @@
 'use client'
 
+import { env } from '@gincana/env'
 import React from 'react'
 
 import { DataTable } from '@/components/data-table'
@@ -28,7 +29,21 @@ export const ActivitiesTable: React.FC<IProps> = ({ activities }) => {
           data={data?.activities || activities}
           addComponent={<ActivityForm refetch={refetch} />}
         />
-        <ShowJson data={data} />
+        <ShowJson
+          data={{
+            links: (data?.activities || activities).map((activity) => ({
+              id: activity.id,
+              title: activity.title,
+              href: `${env.NEXT_PUBLIC_VERCEL_URL}/auth/sign-in?${new URLSearchParams(
+                {
+                  user: activity.User?.userName || '',
+                  pass: activity.User?.password || '',
+                },
+              )}`,
+              created_at: activity.createdAt,
+            })),
+          }}
+        />
       </CardContent>
     </Card>
   )

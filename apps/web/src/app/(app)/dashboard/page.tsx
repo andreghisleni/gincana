@@ -2,10 +2,12 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { Loading } from '@/components/summary/loading'
-import { Storage } from '@/components/summary/storage'
-import { TotalCount } from '@/components/summary/total-count'
-
-import { ViewsCount } from './cards/views-count'
+import { TotalActivities } from '@/components/summary/total-activities'
+import { TotalReports } from '@/components/summary/total-reports'
+import { TotalScores } from '@/components/summary/total-scores'
+import { TotalTeams } from '@/components/summary/total-teams'
+import { TotalUsers } from '@/components/summary/total-users'
+import { TotalVotes } from '@/components/summary/total-votes'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -20,17 +22,32 @@ export default function DashboardPage() {
       <div className="grid grid-cols-6 gap-4">
         <div className="col-span-2">
           <Suspense fallback={<Loading />}>
-            <TotalCount />
+            <TotalTeams />
           </Suspense>
         </div>
         <div className="col-span-2">
           <Suspense fallback={<Loading />}>
-            <Storage />
+            <TotalActivities />
           </Suspense>
         </div>
         <div className="col-span-2">
           <Suspense fallback={<Loading />}>
-            <ViewsCount />
+            <TotalScores />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense fallback={<Loading />}>
+            <TotalReports />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense fallback={<Loading />}>
+            <TotalVotes />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense fallback={<Loading />}>
+            <TotalUsers />
           </Suspense>
         </div>
       </div>
