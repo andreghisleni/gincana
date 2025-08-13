@@ -21,6 +21,7 @@ import { Prices } from './prices'
 import { SunOfPoints } from './sun-of-points'
 import { Timer } from './timer'
 import { Weight } from './weight'
+import { Time } from './time'
 
 type ActivityOneTeamProps = {
   activity: Activity
@@ -256,15 +257,25 @@ export function ActivityOneTeam({ activity, refetch }: ActivityOneTeamProps) {
               <Separator orientation="horizontal" />
 
               {activity.scoreType === 'TIME' && (
-                <Timer {...{ handleFinish, setLockSelectedTeam }} />
+                <Time {...{ handleFinish, setLockSelectedTeam }} />
               )}
 
               {activity.scoreType === 'OBJECTS' && (
                 <Objects {...{ handleFinish, setLockSelectedTeam }} />
               )}
 
-              {activity.scoreType === 'NUMBER' && (
+              {activity.scoreType === 'NUMBER' && activity.numbers.length > 0 && (
                 <SunOfPoints
+                  {...{
+                    numbers: activity.numbers,
+                    handleFinish,
+                    setLockSelectedTeam,
+                  }}
+                />
+              )}
+
+              {activity.scoreType === 'NUMBER' && activity.numbers.length === 0 && (
+                <Points
                   {...{
                     numbers: activity.numbers,
                     handleFinish,
