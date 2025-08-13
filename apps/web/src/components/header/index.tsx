@@ -7,6 +7,7 @@ import { MenuLink } from './menu-link'
 import { routes } from './routes'
 import { ThemeSwitcher } from './theme-switcher'
 import { UserProfileButton } from './user-profile-button'
+import { serverClient } from '@/lib/trpc/server'
 
 export async function Header({
   className,
@@ -21,7 +22,9 @@ export async function Header({
     return null
   }
 
-  const parsedRoutes = routes({ activityId: session.user.activityId })
+  const { saveVote } = await serverClient.getSettings()
+
+  const parsedRoutes = routes({ activityId: session.user.activityId, isVoteActive: saveVote })
 
   return (
     <div className={cn('border-b', className)}>

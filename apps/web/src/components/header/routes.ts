@@ -1,4 +1,4 @@
-export const routes = ({ activityId }: { activityId: string | null }) => ({
+export const routes = ({ activityId, isVoteActive }: { activityId: string | null, isVoteActive: boolean }) => ({
   ADMIN: [
     { href: '/dashboard', title: 'Dashboard' },
     { href: '/scores', shouldMatchExact: true, title: 'Scores' },
@@ -9,11 +9,11 @@ export const routes = ({ activityId }: { activityId: string | null }) => ({
   ],
   ACTIVITY: [
     { href: `/activity/${activityId}`, title: 'Atividade' },
-    { href: '/vote', title: 'Votar' },
+    ...isVoteActive ? [{ href: '/vote', title: 'Votar' }] : [],
     { href: '/point-discount', title: 'Denunciar' },
   ],
   DEFAULT: [
     { href: '/point-discount', title: 'Denunciar' },
-    { href: '/vote', title: 'Votar' },
+    ...isVoteActive ? [{ href: '/vote', title: 'Votar' }] : [],
   ],
 })
