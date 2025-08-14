@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs'
 import { z } from 'zod'
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
+import { update } from '@gincana/auth'
 
 export const usersRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -184,4 +185,31 @@ export const usersRouter = createTRPCRouter({
 
     return { totalUsers }
   }),
+
+  updateUserLastOnline: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      // console.log(ctx)
+      if (!ctx.session.user.id) {
+        throw new Error('User not authenticated')
+      }
+
+      // console.log(ctx.session.user.id)
+
+      // console.log(await prisma.user.findUnique({
+      //   where: {
+      //     id: ctx.session.user.id,
+      //   },
+      // }))
+
+      const user = await prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          lastOnlineAt: new Date(),
+        },
+      })
+
+      return user
+    }),
 })

@@ -31,6 +31,21 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<User>[] => [
     header: 'Senha',
   },
   {
+    accessorKey: 'lastOnlineAt',
+    header: 'Último acesso',
+    cell: ({ getValue }) => {
+      if(!getValue<string>()) {
+        return '-'
+      }
+
+      return (
+        <span>
+          {format(new Date(getValue<string>()), 'dd/MM/yyyy HH:mm')}
+        </span>
+      )
+    },
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Criado em',
     cell: ({ row }) => {
