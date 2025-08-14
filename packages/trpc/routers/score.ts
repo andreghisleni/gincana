@@ -2,6 +2,7 @@ import { prisma } from '@gincana/prisma'
 import { scoreSchema } from '@gincana/schema'
 
 import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { z } from 'zod'
 
 export const scoresRouter = createTRPCRouter({
   createScore: protectedProcedure
@@ -68,6 +69,40 @@ export const scoresRouter = createTRPCRouter({
               id,
             })),
           },
+        },
+      })
+
+      return score
+    }),
+
+  updateScore: protectedProcedure
+    .input(z.object({
+      scoreId: z.string().uuid(),
+      newValue: z.number(),
+    }))
+    .mutation(async ({ input }) => {
+      const settings = await prisma.settings.findFirst()
+
+      if (!settings?.saveScore) {
+        throw new Error('Save score is disabled')
+      }
+
+      const scoreExists = await prisma.score.findUnique({
+        where: {
+          id: input.scoreId,
+        },
+      })
+
+      if (!scoreExists) {
+        throw new Error('Score not found')
+      }
+
+      const score = await prisma.score.update({
+        where: {
+          id: input.scoreId,
+        },
+        data: {
+          value: input.newValue,
         },
       })
 

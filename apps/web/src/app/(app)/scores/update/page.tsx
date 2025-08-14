@@ -16,20 +16,11 @@ export default async function ScoresPage() {
   const { teams } = await serverClient.getTeams()
   const { activities } = await serverClient.getActivities()
 
-  const activities1 = activities.filter((a) => !a.number)
   const activities2 = activities.filter((a) => !!a.number)
 
   return (
     <Screen>
-      {activities1.length > 0 && (
-        <ScoresTable
-          title="Pontuação por atividade e equipe, atividades de todas as equipes"
-          teams={teams}
-          activities={activities1}
-        />
-      )}
       <ScoresTable
-        title="Pontuação por atividade e equipe, atividades de uma ou duas equipes"
         teams={teams}
         activities={activities2}
       />
